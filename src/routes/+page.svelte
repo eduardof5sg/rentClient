@@ -1,6 +1,7 @@
 <script>
     import "../app.css"
 	let fondo = "/backgrounds/portada/mando.mp4";
+    let logo = "/backgrounds/portada/rent.png"
 </script>
 
 <main class="relative h-screen w-full overflow-hidden text-white">
@@ -17,8 +18,9 @@
 
 	<!-- Contenido sobre el video -->
 	<section class="relative z-1 flex flex-col items-center h-full  text-center">
-		<h1 class="text-4xl font-bold mb-22 mt-22">Welcome To Rent&Go</h1>
-		<p class="text-xl max-w-[330px] mb-12 mt-20 text-gray-700 font-bold">
+		
+        <img class="w-70 h-auto bg-white/40 backdrop-blur-md p-1 rounded-xl shadow-md  mt-12" src={logo} alt="logo">
+		<p class="text-xl max-w-[330px] mb-12 mt-12 text-black font-bold">
 			Descubre una nueva forma de jugar. Alquila juegos para tus consolas favoritas o pon los tuyos en alquiler.
             Fácil, rápido y sin complicaciones.
 		</p>
