@@ -2,6 +2,7 @@
     import "../app.css"
 	let fondo = "/backgrounds/portada/mando.mp4";
     let logo = "/backgrounds/portada/rent.png"
+    import { goto } from "$app/navigation";
 </script>
 
 <main class="relative h-screen w-full overflow-hidden text-white">
@@ -25,7 +26,7 @@
             Fácil, rápido y sin complicaciones.
 		</p>
 		<div class="mt-16 flex gap-4 ">
-			<button class="bg-black hover:bg-blue-700 text-white px-5 py-2 rounded-xl shadow-md">
+			<button class="bg-black hover:bg-blue-700 text-white px-5 py-2 rounded-xl shadow-md" on:click={() => goto('/menu')}>
 				Explorar juegos
 			</button>
 			<button class="bg-white text-black hover:bg-gray-100 px-5 py-2 rounded-xl shadow-md">
