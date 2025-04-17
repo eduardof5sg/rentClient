@@ -36,10 +36,10 @@
       {#if juegos.length > 0}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {#each juegos as juego}
-            <div class="bg-white p-2 rounded-lg shadow hover:shadow-md transition max-w-56 flex flex-col items-center">
-              <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-auto h-40 "/>
-              <h3 class="font-semibold text-lg text-blue-700">{juego.titulo}</h3>
-              <p class="text-2xl text-gray-600 truncate">semana: {juego.precio}€</p>
+            <div class="bg-white p-2 rounded-lg shadow hover:shadow-md transition max-w-38 flex flex-col items-center">
+              <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-26 h-26 "/>
+              <h3 class="font-semibold text-md text-blue-700">{juego.titulo}</h3>
+              <p class="text-xl text-gray-600 truncate">semana: {juego.precio}€</p>
               <p class="text-sm text-blue-600 truncate">{juego.genero}</p>
               <p class="text-sm" 
                 class:text-green-500={juego.disponibilidad} 
