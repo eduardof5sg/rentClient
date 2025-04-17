@@ -10,19 +10,21 @@
     <Navbar />
     <div class="max-h-full">
         <div class="relative inline-block">
-            <img src={ps} alt="ps" class="bg-blue-700/40 p-1" />
-            <button on:click={() =>modalPs = true} class="absolute top-40 left-4 bg-white p-2 text-black rounded-xl shadow-md font-bold">
+            <div class="gradient-border inline-block rounded-xl">
+                <img src={ps} alt="ps" class="rounded-xl block" />
+              </div>
+            <button on:click={() =>modalPs = true} class="absolute top-40 left-4 bg-blue-700 p-2 text-white rounded-xl shadow-md font-bold">
               Ver juegos
             </button>
           </div>
-        <div class="relative inline-block">
-            <img src={xbox} alt="xbox" class="w-full h-auto rounded-lg bg-green-700 backdrop-blur-md p-1  shadow-md">
-            <button class="absolute top-40 left-4 bg-white p-2 text-black rounded-xl shadow-md font-bold">
-                Ver juegos
-              </button>
-        </div>
-        <div class="relative inline-block" >
-            <img src={nintendo} alt="nintendo" class="w-full h-auto rounded-lg">
+          <div class="gradient-border1 inline-block rounded-xl relative">
+            <img src={xbox} alt="xbox" class="rounded-xl block" />
+            <button class="absolute top-40 left-4 bg-green-600 p-2 text-white rounded-xl shadow-md font-bold">
+              Ver juegos
+            </button>
+          </div>
+        <div class="gradient-border2 inline-block rounded-xl relative" >
+            <img src={nintendo} alt="nintendo" class="rounded-xl block">
             <button class="absolute top-40 left-4 bg-white p-2 text-black rounded-xl shadow-md font-bold">
                 Ver juegos
               </button>
@@ -31,4 +33,44 @@
     </div>
     <ModalPs visible={modalPs} onClose={() => modalPs = false}/>
 </main>
+<style>
+    .gradient-border {
+      background: linear-gradient(270deg, #3b82f6, #ffffff);
+      background-size: 500% 500%;
+      animation: borderAnim 5s ease infinite;
+      padding: 6px; /* grosor del borde */
+      border-radius: 1rem; /* igual que la imagen */
+    }
+  
+    @keyframes borderAnim {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .gradient-border1 {
+      background: linear-gradient(270deg, #20de2c, #ffffff);
+      background-size: 500% 500%;
+      animation: borderAnim 5s ease infinite;
+      padding: 6px; /* grosor del borde */
+      border-radius: 1rem; /* igual que la imagen */
+    }
+  
+   
+    .gradient-border2 {
+      background: linear-gradient(270deg, #fd1a1a, #3f24ed);
+      background-size: 500% 500%;
+      animation: borderAnim 5s ease infinite;
+      padding: 6px; /* grosor del borde */
+      border-radius: 1rem; /* igual que la imagen */
+    }
+  
+   
+  </style>
     
