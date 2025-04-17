@@ -10,14 +10,14 @@
     <Navbar />
     <div class="max-h-full">
         <div class="relative inline-block">
-            <div class="gradient-border inline-block rounded-xl">
+            <div class="gradient-border inline-block ">
                 <img src={ps} alt="ps" class="rounded-xl block" />
               </div>
             <button on:click={() =>modalPs = true} class="absolute top-40 left-4 bg-blue-700 p-2 text-white rounded-xl shadow-md font-bold">
               Ver juegos
             </button>
           </div>
-          <div class="gradient-border1 inline-block rounded-xl relative">
+          <div class="gradient-border1 inline-block  relative">
             <img src={xbox} alt="xbox" class="rounded-xl block" />
             <button class="absolute top-40 left-4 bg-green-600 p-2 text-white rounded-xl shadow-md font-bold">
               Ver juegos
@@ -39,7 +39,7 @@
       background-size: 500% 500%;
       animation: borderAnim 5s ease infinite;
       padding: 6px; /* grosor del borde */
-      border-radius: 1rem; /* igual que la imagen */
+      border-radius: 0.2rem; /* igual que la imagen */
     }
   
     @keyframes borderAnim {
@@ -59,7 +59,7 @@
       background-size: 500% 500%;
       animation: borderAnim 5s ease infinite;
       padding: 6px; /* grosor del borde */
-      border-radius: 1rem; /* igual que la imagen */
+      border-radius: 0.2rem; /* igual que la imagen */
     }
   
    
@@ -68,7 +68,7 @@
       background-size: 500% 500%;
       animation: borderAnim 5s ease infinite;
       padding: 6px; /* grosor del borde */
-      border-radius: 1rem; /* igual que la imagen */
+      border-radius: 0.2rem; /* igual que la imagen */
     }
   
    

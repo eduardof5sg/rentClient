@@ -3,6 +3,8 @@
 	let fondo = "/backgrounds/portada/mando.mp4";
     let logo = "/backgrounds/portada/rent.png"
     import { goto } from "$app/navigation";
+	import ModalRegistro from "$lib/modales/modalRegistro.svelte";
+	let modalRegistro = false;
 </script>
 
 <main class="relative h-screen w-full overflow-hidden text-white">
@@ -29,9 +31,10 @@
 			<button class="bg-black hover:bg-blue-700 text-white px-5 py-2 rounded-xl shadow-md" on:click={() => goto('/menu')}>
 				Explorar juegos
 			</button>
-			<button class="bg-white text-black hover:bg-gray-100 px-5 py-2 rounded-xl shadow-md">
+			<button on:click={() =>modalRegistro = true} class="bg-white text-black hover:bg-gray-100 px-5 py-2 rounded-xl shadow-md">
 				Registrarme
 			</button>
 		</div>
 	</section>
+	<ModalRegistro visible={modalRegistro} onClose={() => modalRegistro = false} />
 </main>

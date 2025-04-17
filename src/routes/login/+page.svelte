@@ -1,6 +1,30 @@
 <script>
     import "../../app.css"
     const portada = "/backgrounds/login/logoRent.png"
+    import apiLogin from "$lib/endpoints/axioslogin";
+
+    let loginForm = {
+        telefono:"",
+        contraseña:"",
+    }
+
+    let error = "";
+  let mensaje = "";
+
+    async function iniciarSesion(){
+         error = "";
+         mensaje = "";
+        try {
+            console.log(loginForm)
+            const response = await apiLogin.post("/login" , loginForm)
+            console.log(response)
+            const token = response.data.token
+            localStorage.setItem("token", token);
+            location.href = "/menu";
+        } catch (err) {
+            error = err.response?.data?.message || "Error de conexión";
+        }
+    }
 </script>
 
 <main class="flex justify-center items-center min-h-screen bg-gray-100">
@@ -11,15 +35,16 @@
         </div>
 
         <!-- Formulario de Login -->
-        <form class="space-y-6">
+        <form class="space-y-6" on:submit|preventDefault={iniciarSesion}>
             <!-- Campo de Teléfono -->
             <div>
                 <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
                 <input
+                    bind:value={loginForm.telefono}
                     id="telefono"
                     type="tel"
                     name="telefono"
-                    placeholder="Ingresa tu número"
+                    placeholder="Ingresa tu telefono"
                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     required
                 />
@@ -29,6 +54,7 @@
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
                 <input
+                    bind:value={loginForm.contraseña}
                     id="password"
                     type="password"
                     name="password"
@@ -37,6 +63,9 @@
                     required
                 />
             </div>
+            {#if error}
+            <p class="text-red-600 text-sm">{error}</p>
+            {/if}
 
             <!-- Botón de Iniciar sesión -->
             <div>
