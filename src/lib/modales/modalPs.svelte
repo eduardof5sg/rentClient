@@ -34,7 +34,7 @@
       <h2 class="text-2xl font-bold text-blue-700 mb-4">Juegos de PlayStation 5</h2>
 
       {#if juegos.length > 0}
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {#each juegos as juego}
             <div class="bg-white p-2 rounded-lg shadow hover:shadow-md transition max-w-38 flex flex-col items-center">
               <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-26 h-26 "/>
