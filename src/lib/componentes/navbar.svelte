@@ -2,9 +2,11 @@
     import "../../app.css"; // Esto es raro, normalmente no hace falta importar app.css así en un componente.
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
+  import { page } from "$app/state";
   
     let isOpen = false;
     let token = null;
+    let enlaceguarida = '/guarida';
   
     function toggleMenu() {
       isOpen = !isOpen;
@@ -16,12 +18,30 @@
   function logout() {
     localStorage.removeItem("token");
     token = null;
-    location.reload(); // o redirige donde quieras
+    goto("/menu") // o redirige donde quieras
   }
 
-  onMount(() => {
+  function navegar() {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    goto("/login");
+  } else {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const id = payload.userid;
+
+      goto(`/guarida/${id}`);
+    } catch (err) {
+      console.error("Error al decodificar token:", err);
+    }
+  }
+} 
+onMount(() => {
     token = localStorage.getItem("token");
   });
+  
+   
   </script>
   
   <main class="text-white px-2 py-2 bg-black">
@@ -72,7 +92,7 @@
     >
       <a href="/" class="block py-2 px-2 hover:bg-gray-800 rounded">Inicio</a>
       <a href="/menu" class="block py-2 px-2 hover:bg-gray-800 rounded">Consolas</a>
-      <a href="/aboutus" class="block py-2 px-2 hover:bg-gray-800 rounded">About Us</a>
+      <button on:click={navegar}  class="block py-2 px-2 hover:bg-gray-800 rounded">Mi cuenta</button>
       <a href="/contacto" class="block py-2 px-2 hover:bg-gray-800 rounded">Contacto</a>
     </div>
   </main>
