@@ -9,7 +9,7 @@
 
     onMount(async () => {
     try {
-      const response = await apiJuegos.get("?consola=ps5"); // <-- Ruta correcta
+      const response = await apiJuegos.get("?consola=xbox"); // <-- Ruta correcta
       juegos = response.data;
     } catch (error) {
       console.error("Error al cargar juegos de PS5", error);
@@ -31,7 +31,7 @@
         ✕
       </button>
 
-      <h2 class="text-2xl font-bold text-blue-700 mb-4">Juegos de PlayStation 5</h2>
+      <h2 class="text-2xl font-bold text-blue-700 mb-4">Juegos de Xbox</h2>
 
       {#if juegos.length > 0}
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">

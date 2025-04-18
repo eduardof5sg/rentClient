@@ -4,7 +4,9 @@
     let xbox = "/backgrounds/consolas/xbox.jpg"
     let nintendo = "/backgrounds/consolas/nintendo.jpg"
     import ModalPs from "$lib/modales/modalPs.svelte";
+    import ModalXbox from "$lib/modales/modalXbox.svelte";
     let modalPs=false;
+    let modalXbox = false;
 </script>
 <main >
     <Navbar />
@@ -19,7 +21,7 @@
           </div>
           <div class="gradient-border1 inline-block  relative">
             <img src={xbox} alt="xbox" class="rounded-xl block" />
-            <button class="absolute top-40 left-4 bg-green-600 p-2 text-white rounded-xl shadow-md font-bold">
+            <button on:click={() =>modalXbox = true} class="absolute top-40 left-4 bg-green-600 p-2 text-white rounded-xl shadow-md font-bold">
               Ver juegos
             </button>
           </div>
@@ -32,6 +34,7 @@
         
     </div>
     <ModalPs visible={modalPs} onClose={() => modalPs = false}/>
+    <ModalXbox visible={modalXbox} onClose={() => modalXbox = false}/>
 </main>
 <style>
     .gradient-border {
