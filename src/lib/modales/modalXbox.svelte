@@ -23,7 +23,7 @@
 </script>
     {#if visible}
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-    <div class="bg-white rounded-xl shadow-lg w-full max-w-4xl p-6 relative border-4 border-blue-500">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-4xl p-6 relative border-4 border-green-500">
       <button
         class="absolute top-3 right-3 text-xl text-gray-600 hover:text-black"
         on:click={cerrar}
@@ -31,23 +31,23 @@
         ✕
       </button>
 
-      <h2 class="text-2xl font-bold text-blue-700 mb-4">Juegos de Xbox</h2>
+      <h2 class="text-2xl font-bold text-green-700 mb-4">Juegos de Xbox</h2>
 
       {#if juegos.length > 0}
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {#each juegos as juego}
             <div class="bg-white p-2 rounded-lg shadow hover:shadow-md transition max-w-38 flex flex-col items-center">
               <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-26 h-26 "/>
-              <h3 class="font-semibold text-md text-blue-700">{juego.titulo}</h3>
+              <h3 class="font-semibold text-md text-green-700 text-center">{juego.titulo}</h3>
               <p class="text-xl text-gray-600 truncate">semana: {juego.precio}€</p>
-              <p class="text-sm text-blue-600 truncate">{juego.genero}</p>
+              <p class="text-sm text-green-600 truncate">{juego.genero}</p>
               <p class="text-sm" 
                 class:text-green-500={juego.disponibilidad} 
                 class:text-red-500={!juego.disponibilidad}>
                 {juego.disponibilidad ? "Disponible" : "No disponible"}
               </p>
               <button
-                class="p-1 bg-blue-700 text-white rounded-xl mt-2"
+                class="p-1 bg-green-700 text-white rounded-xl mt-2"
                 on:click={() => window.location.href = `/juegos/detalles/${juego._id}`}
               >
                 Ir al juego
