@@ -4,6 +4,7 @@
 
     export let visible = false;
     export let onClose;
+    
 
     let juegos = [];
 
@@ -11,6 +12,7 @@
     try {
       const response = await apiJuegos.get("?consola=Ps5"); // <-- Ruta correcta
       juegos = response.data;
+      console.log(juegos)
     } catch (error) {
       console.error("Error al cargar juegos de PS5", error);
     }
@@ -23,7 +25,7 @@
 </script>
     {#if visible}
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-    <div class="bg-white rounded-xl shadow-lg w-full max-w-4xl p-6 relative border-4 border-blue-500">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 relative border-4 border-blue-500">
       <button
         class="absolute top-3 right-3 text-xl text-gray-600 hover:text-black"
         on:click={cerrar}
@@ -39,14 +41,22 @@
             <div class="bg-white p-2 rounded-lg shadow hover:shadow-md transition max-w-38 flex flex-col items-center">
               <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-26 h-26 "/>
               <h3 class="font-semibold text-md text-blue-700">{juego.titulo}</h3>
-              <p class="text-xl text-gray-600 truncate">{juego.precio}€</p>
-              <p class="text-sm text-blue-600 truncate">{juego.genero}</p>
+              <p class="text-xl text-gray-600 font-bold">{juego.precio}€</p>
+              <p class="text-sm font-bold">usuario</p>
+              <p
+                class="text-sm"
+                class:text-green-500={juego.userid.verificado}
+                class:text-red-500={!juego.userid.verificado}
+              >
+                {juego.userid.verificado ? "Verificado" : "Sin verificar"}
+              </p>
+              <p class="font-bold ">juego:</p>
               <p class="text-sm" 
                 class:text-green-500={juego.disponibilidad} 
                 class:text-red-500={!juego.disponibilidad}>
                 {juego.disponibilidad ? "Disponible" : "No disponible"}
               </p>
-              <p>{juego.userid.codigopostal}</p>
+              
               <button
                 class="p-1 bg-blue-700 text-white rounded-xl mt-2"
                 on:click={() => window.location.href = `/juegos/detalles/${juego._id}`}
