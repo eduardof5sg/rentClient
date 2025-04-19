@@ -7,7 +7,7 @@ export async function load({ params }) {
   let datos = null;
   let alquileres = [];
   let juegos = [];
-  let mensajeErrorJuegos = "";
+  let alquilados = [];
 
   try {
     const datosResponse = await apiUsers.get(`/datos/${id}`);
@@ -28,13 +28,21 @@ export async function load({ params }) {
     juegos = juegosResponse.data
   } catch (error) {
     console.log(error)
-    mensajeErrorJuegos = error.response?.data?.message || "No tienes juegos"
+    
+  }
+
+  try {
+    const alquiladosResponse = await apiAlquiler.get(`/alquilados/${id}`);
+    alquilados = alquiladosResponse.data
+  } catch (error) {
+    console.log(error)
+   
   }
 
   return {
     datos,
     alquileres,
     juegos,
-    mensajeErrorJuegos
+    alquilados,
   };
 }

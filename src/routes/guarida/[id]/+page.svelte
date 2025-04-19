@@ -3,7 +3,7 @@
     import Navbar from '$lib/componentes/navbar.svelte';
     import apiAlquiler from '$lib/endpoints/axios.alquiler.js';
     export let data;
-    const {datos,alquileres,juegos,mensajeErrorJuegos} = data
+    const {datos,alquileres,juegos,alquilados} = data
     let tabActivo = 'datos';
     console.log(data)
 
@@ -128,18 +128,17 @@
         {#if juegos.length >0}
         <div class="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2">
           {#each juegos as juego}
-            <div class=" bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
-              <h2 class=" font-bold text-indigo-700 mb-2 text-center"> {juego.titulo}</h2>
+            <div class=" bg-gray-200 rounded-lg shadow-md p-1 flex flex-col items-center mt-4">
+              <p class:text-green-600={juego.disponibilidad} class:text-red-600={!juego.disponibilidad}>
+                {juego.disponibilidad ? "Disponible" : "Alquilado"}
+              </p> 
               <img
                 src={juego.imagenes[0]}
                 alt="Imagen del juego"
-                class="w-auto object-cover rounded mb-2"
+                class="w-auto object-cover rounded mb-2 mt-1"
               />
               <p>{juego.precio}€</p>
-              <p class:text-green-600={juego.disponibilidad} class:text-red-600={!juego.disponibilidad}>
-                {juego.disponibilidad ? "Disponible" : "No disponible"}
-              </p> 
-              <p><strong>Veces alquilado :</strong> {juego.totalalquileres}</p>
+              <p class="text-center"><strong>Alquileres:</strong> {juego.totalalquileres}</p>
             </div>
           {/each}
         </div>
@@ -148,6 +147,36 @@
         {/if}
       {:else if tabActivo === 'pedidos'}
         <p class="text-xl font-bold text-yellow-600">Aquí verás tus pedidos 📦</p>
+        {#if alquilados.length>0}
+        <div>
+          {#each alquilados as alquilado }
+          <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md mx-auto mt-6">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">Detalles del alquiler</h2>
+            <div class="space-y-3">
+              <div class="flex justify-between border-b pb-2">
+                <span class="font-semibold text-gray-600">Juego:</span>
+                <span>{alquilado.juegoid.titulo}</span>
+              </div>
+              <div class="flex justify-between border-b pb-2">
+                <span class="font-semibold text-gray-600">Estado:</span>
+                <span>{alquilado.estado}</span>
+              </div>
+              <div class="flex justify-between border-b pb-2">
+                <span class="font-semibold text-gray-600">Teléfono del cliente:</span>
+                <span>{alquilado.cliente.telefono}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-semibold text-gray-600">Precio final:</span>
+                <span>{alquilado.preciofinal}€</span>
+              </div>
+            </div>
+          </div>
+          
+          {/each}
+        </div>
+        {:else}
+        <p>Aun no has alquilado ningun juego</p>
+        {/if}
       {:else if tabActivo === 'solicitudes'}
       <div class="flex flex-col items-center">
          <p class="text-xl font-bold text-red-600 text-center">Aquí están tus solicitudes de alquiler 📝</p>
