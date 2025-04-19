@@ -9,7 +9,7 @@
 
     onMount(async () => {
     try {
-      const response = await apiJuegos.get("?consola=xbox"); // <-- Ruta correcta
+      const response = await apiJuegos.get("?consola=Xbox-Series"); // <-- Ruta correcta
       juegos = response.data;
     } catch (error) {
       console.error("Error al cargar juegos de PS5", error);
@@ -39,13 +39,14 @@
             <div class="bg-white p-2 rounded-lg shadow hover:shadow-md transition max-w-38 flex flex-col items-center">
               <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-26 h-26 "/>
               <h3 class="font-semibold text-md text-green-700 text-center">{juego.titulo}</h3>
-              <p class="text-xl text-gray-600 truncate">semana: {juego.precio}€</p>
+              <p class="text-xl text-gray-600 truncate"> {juego.precio}€</p>
               <p class="text-sm text-green-600 truncate">{juego.genero}</p>
               <p class="text-sm" 
                 class:text-green-500={juego.disponibilidad} 
                 class:text-red-500={!juego.disponibilidad}>
                 {juego.disponibilidad ? "Disponible" : "No disponible"}
               </p>
+              <p>{juego.userid.codigopostal}</p>
               <button
                 class="p-1 bg-green-700 text-white rounded-xl mt-2"
                 on:click={() => window.location.href = `/juegos/detalles/${juego._id}`}

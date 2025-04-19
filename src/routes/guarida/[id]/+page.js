@@ -8,6 +8,7 @@ export async function load({ params }) {
   let alquileres = [];
   let juegos = [];
   let alquilados = [];
+  let pedidos = [];
 
   try {
     const datosResponse = await apiUsers.get(`/datos/${id}`);
@@ -39,10 +40,19 @@ export async function load({ params }) {
    
   }
 
+  try {
+    const pedidosResponse = await apiAlquiler.get(`/pedidos/${id}`);
+    pedidos = pedidosResponse.data
+  } catch (error) {
+    console.log(error)
+   
+  }
+
   return {
     datos,
     alquileres,
     juegos,
     alquilados,
+    pedidos
   };
 }

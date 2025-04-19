@@ -12,8 +12,9 @@
     let semanas = 1;
     let clienteId = '';
     let mensaje ='';
-    let fallo = "";
+    let fallo = '';
     let confirmacion = false;
+    
 
     const siguiente = () => {
     imagenActual = (imagenActual + 1) % juego.imagenes.length;
@@ -50,9 +51,10 @@
   });
 
   const confirmarAlquiler = async() =>{
-      mensaje="";
-      fallo ="";
-      const preciofinal = juego.precio*semanas;
+      mensaje='';
+      fallo ='';
+      const gastosEnvio = 1;
+      const preciofinal = (juego.precio*semanas) + gastosEnvio;
       const hoy = new Date();
       const fechasolicitud = `${hoy.getDate().toString().padStart(2, '0')}/${(hoy.getMonth() + 1).toString().padStart(2, '0')}/${hoy.getFullYear()}`;
       const body = {
@@ -66,7 +68,8 @@
       const response = await apiAlquiler.post(`/${juego._id}`,body)
       confirmacion = true;
     } catch (error) {
-      fallo = error.response?.data?.message || "Error de conexión";
+      fallo = error.response.data.message || "Error de conexión";
+      console.log(fallo)
     }
   }
   function recargarPagina() {
@@ -106,7 +109,7 @@
     {/if} 
     </div>
     {#if mostrarModal}
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-50">
       <div class="bg-white p-6 rounded shadow-xl w-[300px] text-center">
         <h2 class="text-xl font-bold mb-4">Confirmar alquiler</h2>
         <p>Selecciona duración:</p>
@@ -115,18 +118,19 @@
           <option value="2">2 semanas</option>
           <option value="3">3 semanas</option>
         </select>
-
-        <p class="mb-4"><strong>Precio total:</strong> {juego.precio * semanas}€</p>
-
+        <p><strong>Precio</strong> {juego.precio * semanas}€</p>
+        <p class="text-violet-700"><strong>envío:</strong> 1€</p>
+        <p class="mb-4"><strong>Total:</strong> {juego.precio * semanas + 1}€</p>
         <div class="flex justify-between">
           <button on:click={() => mostrarModal = false} class="bg-gray-300 px-4 py-1 rounded">Cancelar</button>
           <button on:click={confirmarAlquiler} class="bg-violet-700 text-white px-4 py-1 rounded">Confirmar</button>
         </div>
+        {#if fallo}
+            <p class="text-red-600 text-sm">{fallo}</p>
+        {/if}
       </div>
-      {#if fallo}
-            <p class="text-red-600 text-sm">{error}</p>
-            {/if}
-    </div>
+      
+     </div>
     {/if}
     {#if confirmacion}
   <div class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">

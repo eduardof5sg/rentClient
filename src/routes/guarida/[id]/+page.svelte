@@ -1,11 +1,14 @@
 <script>
     import { onMount } from 'svelte';
     import Navbar from '$lib/componentes/navbar.svelte';
+    import CrearJuego from '$lib/modales/crearJuego.svelte';
     import apiAlquiler from '$lib/endpoints/axios.alquiler.js';
     export let data;
-    const {datos,alquileres,juegos,alquilados} = data
+    const {datos,alquileres,juegos,alquilados,pedidos} = data
     let tabActivo = 'datos';
-    console.log(data)
+    let modalVisible = false;
+    
+    
 
     const cambiarTab = (tab) =>{
         tabActivo = tab;
@@ -124,6 +127,20 @@
       </div>
         
       {:else if tabActivo === 'juegos'}
+      <div class="flex flex-row mb-6" >
+        <button
+          class="bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700"
+          on:click={() => modalVisible = true}
+        >
+          Subir juego
+        </button>
+
+        <CrearJuego
+          visible={modalVisible}
+          userid={datos._id}
+          onClose={() => modalVisible = false}
+        />
+      </div>
         <p class="text-xl font-bold text-green-600 text-center">Aquí puedes gestionar tus juegos 🎮</p>
         {#if juegos.length >0}
         <div class="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -143,15 +160,17 @@
           {/each}
         </div>
         {:else}
-        <p>Aun no tienes juegos subidos</p>
+        <p class="text-center">Aun no tienes juegos subidos</p>
         {/if}
       {:else if tabActivo === 'pedidos'}
-        <p class="text-xl font-bold text-yellow-600">Aquí verás tus pedidos 📦</p>
+        <p class="text-xl font-bold text-yellow-600 text-center">Aquí verás tus pedidos 📦</p>
+        <h1 class="text-white text-xl text-center bg-black p-1 rounded-xl font-bold mt-5 w-auto">Juegos que has alquilado</h1>
         {#if alquilados.length>0}
         <div>
           {#each alquilados as alquilado }
           <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md mx-auto mt-6">
-            <h2 class="text-xl font-bold mb-4 text-gray-800">Detalles del alquiler</h2>
+            
+            <h2 class="text-md font-bold mb-4 text-gray-800">Detalles del alquiler</h2>
             <div class="space-y-3">
               <div class="flex justify-between border-b pb-2">
                 <span class="font-semibold text-gray-600">Juego:</span>
@@ -162,12 +181,44 @@
                 <span>{alquilado.estado}</span>
               </div>
               <div class="flex justify-between border-b pb-2">
-                <span class="font-semibold text-gray-600">Teléfono del cliente:</span>
-                <span>{alquilado.cliente.telefono}</span>
+                <span class="font-semibold text-gray-600">Fecha:</span>
+                <span>{alquilado.fechasolicitud}</span>
               </div>
               <div class="flex justify-between">
                 <span class="font-semibold text-gray-600">Precio final:</span>
                 <span>{alquilado.preciofinal}€</span>
+              </div>
+            </div>
+          </div>
+          
+          {/each}
+        </div>
+        {:else}
+        <p>Aun no has Puesto en alquiler ningun juego</p>
+        {/if}
+        <h1 class="text-xl text-white text-center font-bold bg-black p-1 rounded-xl mt-5">Juegos que has solicitado</h1>
+        {#if pedidos.length>0}
+        <div>
+          {#each pedidos as pedido }
+          <div class="bg-white shadow-md rounded-lg p-2 w-full max-w-md mx-auto ">
+            
+            <h2 class="text-md font-bold mb-2 mt-3 text-gray-800">Detalles del pedido</h2>
+            <div class="space-y-3">
+              <div class="flex justify-between border-b pb-2">
+                <span class="font-semibold text-gray-600">Juego:</span>
+                <span>{pedido.juegoid.titulo}</span>
+              </div>
+              <div class="flex justify-between border-b pb-2">
+                <span class="font-semibold text-gray-600">Estado:</span>
+                <span class="text-violet-700">{pedido.estado}</span>
+              </div>
+              <div class="flex justify-between border-b pb-2">
+                <span class="font-semibold text-gray-600">Fecha:</span>
+                <span>{pedido.fechasolicitud}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-semibold text-gray-600">Precio final:</span>
+                <span>{pedido.preciofinal}€</span>
               </div>
             </div>
           </div>
