@@ -9,7 +9,7 @@
 
     onMount(async () => {
     try {
-      const response = await apiJuegos.get("?consola=Xbox-Series"); // <-- Ruta correcta
+      const response = await apiJuegos.get("?consola=XboxSeries"); // <-- Ruta correcta
       juegos = response.data;
     } catch (error) {
       console.error("Error al cargar juegos de PS5", error);

@@ -126,7 +126,7 @@
           <button on:click={confirmarAlquiler} class="bg-violet-700 text-white px-4 py-1 rounded">Confirmar</button>
         </div>
         {#if fallo}
-            <p class="text-red-600 text-sm">{fallo}</p>
+            <p class="text-red-600 text-sm font-bold mt-3">{fallo}</p>
         {/if}
       </div>
       
