@@ -3,7 +3,7 @@
     import Navbar from '$lib/componentes/navbar.svelte';
     import apiAlquiler from '$lib/endpoints/axios.alquiler.js';
     export let data;
-    const {datos,alquileres} = data
+    const {datos,alquileres,juegos,mensajeErrorJuegos} = data
     let tabActivo = 'datos';
     console.log(data)
 
@@ -20,6 +20,25 @@
             alert("Hubo un problema al confirmar");
         }
     }
+
+    async function eliminarAlquiler(solicitudId) {
+  try {
+    const response = await apiAlquiler.delete(`/${solicitudId}`, {
+      data: {
+        propietario: datos._id  // o datos.propietario si ya lo tienes así
+      }
+    });
+
+    if (response.status === 200) {
+      alert("Solicitud eliminada correctamente.");
+      // Opcional: refrescar la lista o navegar
+      location.reload(); // o actualiza el array en memoria si prefieres
+    }
+  } catch (error) {
+    console.error("Error al eliminar alquiler:", error);
+    alert(error.response?.data?.message || "Error al eliminar la solicitud.");
+  }
+}
 </script>
 <Navbar />
 <main class="p-2">
@@ -105,7 +124,28 @@
       </div>
         
       {:else if tabActivo === 'juegos'}
-        <p class="text-xl font-bold text-green-600">Aquí puedes gestionar tus juegos 🎮</p>
+        <p class="text-xl font-bold text-green-600 text-center">Aquí puedes gestionar tus juegos 🎮</p>
+        {#if juegos.length >0}
+        <div class="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2">
+          {#each juegos as juego}
+            <div class=" bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
+              <h2 class=" font-bold text-indigo-700 mb-2 text-center"> {juego.titulo}</h2>
+              <img
+                src={juego.imagenes[0]}
+                alt="Imagen del juego"
+                class="w-auto object-cover rounded mb-2"
+              />
+              <p>{juego.precio}€</p>
+              <p class:text-green-600={juego.disponibilidad} class:text-red-600={!juego.disponibilidad}>
+                {juego.disponibilidad ? "Disponible" : "No disponible"}
+              </p> 
+              <p><strong>Veces alquilado :</strong> {juego.totalalquileres}</p>
+            </div>
+          {/each}
+        </div>
+        {:else}
+        <p>Aun no tienes juegos subidos</p>
+        {/if}
       {:else if tabActivo === 'pedidos'}
         <p class="text-xl font-bold text-yellow-600">Aquí verás tus pedidos 📦</p>
       {:else if tabActivo === 'solicitudes'}
@@ -130,6 +170,12 @@
                 on:click={() => confirmarAlquiler(alquiler._id)}
               >
                 Confirmar 
+              </button>
+              <button
+                class="mt-4 bg-red-600 text-white p-1 rounded hover:bg-green-700"
+                on:click={() => eliminarAlquiler(alquiler._id)}
+              >
+                Descartar 
               </button>
             </div>
           {/each}
