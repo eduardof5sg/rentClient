@@ -60,7 +60,7 @@
           {#each juegos as juego}
             <div class="bg-white p-2 rounded-lg shadow hover:shadow-md transition max-w-38 flex flex-col items-center">
               <p class="text-sm font-bold mb-2">
-                {#if verificarZona(juego.userid.codigoPostal)}
+                {#if verificarZona(juego.userid.codigopostal)}
                   <span class="text-green-500">En tu zona</span>
                 {:else}
                   <span class="text-red-500">Fuera de zona</span>

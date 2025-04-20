@@ -6,18 +6,39 @@
     export let onClose;
 
     let juegos = [];
+    let codigoPostalToken = null;
 
-    onMount(async () => {
-    try {
-      const response = await apiJuegos.get("?consola=XboxSeries"); // <-- Ruta correcta
-      juegos = response.data;
-    } catch (error) {
-      console.error("Error al cargar juegos de PS5", error);
+    onMount(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        // Decodificar el token (solo el payload)
+        const payload = JSON.parse(atob(token.split(".")[1])); // Decodificamos el payload
+        codigoPostalToken = payload.codigopostal; // Obtener el código postal
+        console.log(codigoPostalToken)
+      } catch (err) {
+        console.error("Error al decodificar token:", err);
+      }
     }
+
+    // Cargar los juegos
+    apiJuegos.get("?consola=XboxSeries")
+      .then(response => {
+        juegos = response.data;
+        console.log(juegos);
+      })
+      .catch(error => {
+        console.error("Error al cargar juegos de PS5", error);
+      });
   });
 
   const cerrar = () => {
     onClose();
+  };
+
+  const verificarZona = (codigoPostalJuego) => {
+    return codigoPostalJuego === codigoPostalToken;
   };
 
 </script>
@@ -37,6 +58,13 @@
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {#each juegos as juego}
             <div class="bg-white p-2 rounded-lg shadow hover:shadow-md transition max-w-38 flex flex-col items-center">
+              <p class="text-sm font-bold mb-2">
+                {#if verificarZona(juego.userid.codigopostal)}
+                  <span class="text-green-500">En tu zona</span>
+                {:else}
+                  <span class="text-red-500">Fuera de zona</span>
+                {/if}
+              </p>
               <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-26 h-26 "/>
               <h3 class="font-semibold text-md text-green-700 text-center">{juego.titulo}</h3>
               <p class="text-xl text-gray-600 truncate"> {juego.precio}€</p>
