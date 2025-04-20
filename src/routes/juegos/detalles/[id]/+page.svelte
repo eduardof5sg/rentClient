@@ -26,15 +26,36 @@
 
   const alquilar = () => {
     const token = localStorage.getItem("token");
+    
+    // Verificar si el token existe
     if (!token) {
       alert("Debes iniciar sesión para alquilar un juego.");
-      goto("/login");
+      goto("/login"); // Redirigir a la página de login
       return;
     }
+    
+    try {
+      // Decodificar el token y obtener el usuario ID
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const usuarioId = payload.userid;
+      
+      // Verificar si el usuario es el propietario del juego
+      if (juego.userid === usuarioId) {
+        alert("Ya eres propietario de este juego.");
+        return; // No continuar con el alquiler
+      }
+      
+    } catch (err) {
+      console.error("Error al decodificar el token:", err);
+    }
+    
+    // Verificar si el juego está disponible
     if (!juego.disponibilidad) {
-      alert("Este juego no esta disponible ");
+      alert("Este juego no está disponible.");
       return;
     }
+    
+    // Si pasa todas las verificaciones, mostrar el modal
     mostrarModal = true;
   };
 
