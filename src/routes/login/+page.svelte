@@ -2,6 +2,7 @@
     import "../../app.css"
     const portada = "/backgrounds/login/logoRent.png"
     import apiLogin from "$lib/endpoints/axioslogin";
+    import { jwtDecode } from "jwt-decode";
 
     let loginForm = {
         telefono:"",
@@ -15,12 +16,18 @@
          error = "";
          mensaje = "";
         try {
-            console.log(loginForm)
+            
             const response = await apiLogin.post("/login" , loginForm)
-            console.log(response)
             const token = response.data.token
             localStorage.setItem("token", token);
-            location.href = "/menu";
+            const rolusuario = jwtDecode(token)
+            const rol = rolusuario.rol
+            if(rol === "user"){
+                location.href = "/menu"
+            } else if (rol === "repartidor"){
+                location.href = "/delivery"
+
+            }
         } catch (err) {
             error = err.response?.data?.message || "Error de conexión";
         }
