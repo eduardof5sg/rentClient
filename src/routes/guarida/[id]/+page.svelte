@@ -8,6 +8,7 @@
     const {datos,alquileres,juegos,alquilados,pedidos} = data
     let tabActivo = 'datos';
     let modalVisible = false;
+    let modalVerificar = false;
 
     let fechainicio = '';
     let fechafin = '';
@@ -18,6 +19,23 @@
     const cambiarTab = (tab) =>{
         tabActivo = tab;
     }
+
+    const abrirModalVerificar = () => {
+    modalVerificar = true;
+  };
+
+  const cerrarModalVerificar = () => {
+    modalVerificar = false;
+  };
+  const enviarMensaje = () => {
+    const numero = '627339450';
+    const mensaje = 'Confirmo mi numero de telefono ✅';
+
+    // Simulación: abrir WhatsApp o log para desarrollo
+    window.open(`https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`, '_blank');
+
+    modalVerificar = false;
+  };
 
     const formatFecha = (fecha) => {
     if (!fecha) return ''; 
@@ -176,12 +194,29 @@
                   {#if datos.verificado}
                     <span class="text-green-600 font-semibold">verificado</span>
                   {:else}
+                  <div class="flex flex-row justify-around items-center">
                     <span class="text-red-600 font-semibold"> No verificado</span>
+                    <button class="p-1 bg-green-500 rounded-xl shadow-md text-white" on:click={abrirModalVerificar}>
+                      Verificar
+                    </button>
+                  </div>
+                    
                   {/if}
                 </td>
               </tr>
             </tbody>
         </table>
+        {#if modalVerificar}
+        <div class="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
+          <div class="bg-white p-6 rounded-xl shadow-lg text-center w-auto">
+            <h2 class="text-lg font-semibold mb-4">¿Enviar mensaje de verificación?</h2>
+            <div class="flex justify-center gap-4">
+              <button class="px-4 py-2 bg-red-500 text-white rounded-lg" on:click={cerrarModalVerificar}>Cancelar</button>
+              <button class="px-4 py-2 bg-green-600 text-white rounded-lg" on:click={enviarMensaje}>Aceptar</button>
+            </div>
+          </div>
+        </div>
+      {/if}
       </div>
         
       {:else if tabActivo === 'juegos'}
