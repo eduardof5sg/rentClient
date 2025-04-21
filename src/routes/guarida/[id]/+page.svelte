@@ -338,7 +338,7 @@
       <div class="flex flex-col items-center">
          <p class="text-xl font-bold text-red-600 text-center">Aquí están tus solicitudes de alquiler 📝</p>
         {#if alquileres.length > 0}
-        <div class="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2">
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
           {#each alquileres as alquiler}
             <div class=" bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
               <h2 class=" font-bold text-indigo-700 mb-2 text-center"> {alquiler.juegoid.titulo}</h2>
