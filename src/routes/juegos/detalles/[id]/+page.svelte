@@ -81,6 +81,7 @@
     const body = {
       propietario: juego.userid,
       cliente: clienteId,
+      semanas,
       preciofinal,
       fechasolicitud: fechasolicitud,
     };

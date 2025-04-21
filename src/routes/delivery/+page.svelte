@@ -238,7 +238,8 @@
               <div class="flex justify-between border-b pb-1">
                 <span class="font-semibold text-gray-600">Estado:</span>
                 <span class="text-violet-700">{historial.estado}</span>
-              </div>
+              </div>     
+              
               <div class="flex justify-between border-b pb-1">
                 <span class="font-semibold text-gray-600">Direccion entrega:</span>
                 <span>{historial.cliente.direccion}</span>
@@ -257,6 +258,10 @@
                   <span>{historial.fechafin}</span>
                 </div>
               {/if}
+              <div class="flex justify-between">
+                <span class="font-semibold text-gray-600">Semanas:</span>
+                <span>{historial.semanas}€</span>
+              </div>
               <div class="flex justify-between">
                 <span class="font-semibold text-gray-600">Precio:</span>
                 <span>{historial.preciofinal}€</span>

@@ -43,6 +43,10 @@
     error = error.response?.data?.message || "Error al registrar";
   }
 };
+
+function recargarPagina() {
+    location.reload();
+  }
   </script>
   
   {#if visible}
@@ -158,7 +162,7 @@
           class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 mt-4"
           on:click={() => {
             confirmacion = false;
-            onClose(); // cerrar el modal principal
+            recargarPagina(); // cerrar el modal principal
           }}
         >
           Aceptar

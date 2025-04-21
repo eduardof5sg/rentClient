@@ -271,7 +271,7 @@
               </div>
               <div class="flex justify-between border-b pb-2">
                 <span class="font-semibold text-gray-600">Estado:</span>
-                <span>{alquilado.estado}</span>
+                <span class="text-violet-600 font-bold ">{alquilado.estado}</span>
               </div>
               <div class="flex justify-between border-b pb-2">
                 <span class="font-semibold text-gray-600">Fecha:</span>
@@ -315,15 +315,17 @@
                 <span>{pedido.fechainicio}</span>
               </div>
               <div class="flex justify-between border-b pb-2">
-                <span class="font-semibold text-gray-600">Fecha de fin:</span>
-                <span>{pedido.fechafin}</span>
+                <span class="font-semibold text-gray-600">Fecha de devolucion:</span>
+                <span class="text-violet-700 font-bold">{pedido.fechafin}</span>
               </div>
             {/if}
               <div class="flex justify-between">
                 <span class="font-semibold text-gray-600">Precio final:</span>
                 <span>{pedido.preciofinal}€</span>
               </div>
+              {#if pedido.estado !=="entregado"}
               <button on:click={() => abrirEntrega(pedido)} class="p-2 rounded-xl bg-violet-600 text-white px-16 ml-10 mt-2">Confirmar Entrega</button>
+              {/if}
             </div>
           </div>
           
