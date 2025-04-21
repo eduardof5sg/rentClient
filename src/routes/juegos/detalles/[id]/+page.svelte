@@ -111,7 +111,7 @@
           class="bg-violet-700 text-white p-2 rounded-xl mb-2 font-bold"
           >Alquilar</button
         >
-        <h1 class="text-2xl font-bold text-blue-800 mb-4">{juego.titulo}</h1>
+        <h1 class="text-3xl font-bold text-blue-800 mb-4">{juego.titulo}</h1>
         <p class="mb-8">"{juego.descripcion}"</p>
         <div
           class="relative w-64 h-64 mb-4 mx-auto gradient-border
@@ -122,7 +122,7 @@
           <img
             src={juego.imagenes[imagenActual]}
             alt="Imagen del juego"
-            class="w-full h-full object-cover rounded shadow-md transition-all duration-300"
+            class="w-full h-full object-cover rounded-xl shadow-lg transition-all duration-300"
           />
           <button
             on:click={anterior}
@@ -159,12 +159,14 @@
             >
           </button>
         </div>
-        <p><strong>Género:</strong> {juego.genero}</p>
-        <p><strong>Precio por semana:</strong> {juego.precio}€</p>
-        <p><strong>Estado:</strong> {juego.estado}</p>
+        <p>{juego.genero}</p>
+        <p class="text-2xl font-bold text-indigo-600">{juego.precio}€</p>
+        <p class="font-bold">{juego.estado}</p>
         <p
-          class:text-green-600={juego.disponibilidad}
-          class:text-red-600={!juego.disponibilidad}
+         
+          class={
+            `${!juego.disponibilidad ? 'bg-red-600 text-white p-1 rounded-xl font-bold' : 'bg-green-600 text-white p-1 rounded-xl font-bold'}`
+          }
         >
           {juego.disponibilidad ? "Disponible" : "No disponible"}
         </p>

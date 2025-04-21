@@ -223,53 +223,82 @@
       <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
         <div class="flex flex-row justify-around">
           <h2 class="text-xl text-center bg-violet-700 text-white rounded-xl p-2 ">Historial de pedidos</h2>
-          <button class="absolute top-10 right-6 text-white" on:click={() =>cerrarModalHistorial()}
+          <button class="absolute top-20 right-6 bg-red-400 p-2 rounded-xl" on:click={() =>cerrarModalHistorial()}
         >✖</button
       >
         </div>
         {#each historiales as historial}
-          <div class="bg-gray-100 shadow rounded-md p-4">
-            <h2 class="text-lg font-bold mb-2 text-gray-800">Detalles del pedido</h2>
-            <div class="space-y-2">
-              <div class="flex justify-between border-b pb-1">
-                <span class="font-semibold text-gray-600">Juego:</span>
-                <span>{historial.juegoid}</span>
+            <div class="bg-gray-100 shadow rounded-md p-4">
+              <h2 class="text-lg font-bold mb-4 text-gray-800 text-center">Detalles del pedido</h2>
+
+              <div class="overflow-x-auto border-b pb-4 mb-2">
+                <table class="min-w-full table-auto border-collapse rounded shadow-md">
+                  <thead>
+                    <tr class="bg-gray-500 text-sm text-white font-semibold">
+                      <th class="px-4 py-2 text-left">Propietario</th>
+                      <th class="px-4 py-2 text-left">Cliente</th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-gray-700 text-sm">
+                    <tr class="border-t">
+                      <td class="px-4 py-2">{historial.propietario.nombre}</td>
+                      <td class="px-4 py-2">{historial.cliente.nombre}</td>
+                    </tr>
+                    <tr class="border-t">
+                      <td class="px-4 py-2">{historial.propietario.telefono}</td>
+                      <td class="px-4 py-2">{historial.cliente.telefono}</td>
+                    </tr>
+                    <tr class="border-t">
+                      <td class="px-4 py-2">{historial.propietario.direccion}</td>
+                      <td class="px-4 py-2">{historial.cliente.direccion}</td>
+                    </tr>
+                    <!-- Puedes añadir más campos si quieres -->
+                  </tbody>
+                </table>
               </div>
-              <div class="flex justify-between border-b pb-1">
-                <span class="font-semibold text-gray-600">Estado:</span>
-                <span class="text-violet-700">{historial.estado}</span>
-              </div>     
-              
-              <div class="flex justify-between border-b pb-1">
-                <span class="font-semibold text-gray-600">Direccion entrega:</span>
-                <span>{historial.cliente.direccion}</span>
-              </div>
-              <div class="flex justify-between border-b pb-1">
-                <span class="font-semibold text-gray-600">Direccion de Recogida</span>
-                <span>{historial.propietario.direccion}</span>
-              </div>
-              {#if historial.fechainicio && historial.fechafin}
+
+              <!-- Datos generales del alquiler -->
+              <div class="space-y-2">
                 <div class="flex justify-between border-b pb-1">
-                  <span class="font-semibold text-gray-600">Inicio:</span>
-                  <span>{historial.fechainicio}</span>
+                  <span class="font-semibold text-gray-600">Juego:</span>
+                  <span>{historial.juegoid.titulo}</span>
                 </div>
+
                 <div class="flex justify-between border-b pb-1">
-                  <span class="font-semibold text-gray-600">Fin:</span>
-                  <span>{historial.fechafin}</span>
+                  <span class="font-semibold text-gray-600">Estado:</span>
+                  <span class="text-violet-700 font-bold text-lg">{historial.estado}</span>
                 </div>
-              {/if}
-              <div class="flex justify-between">
-                <span class="font-semibold text-gray-600">Semanas:</span>
-                <span>{historial.semanas}€</span>
+
+                {#if historial.fechainicio && historial.fechafin}
+                  <div class="flex justify-between border-b pb-1">
+                    <span class="font-semibold text-gray-600">Inicio:</span>
+                    <span>{historial.fechainicio}</span>
+                  </div>
+                  <div class="flex justify-between border-b pb-1">
+                    <span class="font-bold text-gray-600">Devolucion:</span>
+                    <span class="font-bold text-red-600 ">{historial.fechafin}</span>
+                  </div>
+                {/if}
+
+                <div class="flex justify-between border-b pb-1">
+                  <span class="font-semibold text-gray-600">Semanas:</span>
+                  <span>{historial.semanas}</span>
+                </div>
+
+                <div class="flex justify-between">
+                  <span class="font-semibold text-gray-600">Precio:</span>
+                  <span>{historial.preciofinal}€</span>
+                </div>
               </div>
-              <div class="flex justify-between">
-                <span class="font-semibold text-gray-600">Precio:</span>
-                <span>{historial.preciofinal}€</span>
-              </div>
+
+              <button
+                class="bg-red-500 text-white p-2 rounded-xl mt-4 px-10"
+                on:click={() => abriModalIncidencia(historial)}>
+                Reportar incidencia
+              </button>
             </div>
-            <button class="bg-red-500 text-white p-2 rounded-xl mt-2 px-10 ml-8" on:click={()=>abriModalIncidencia(historial)}>Repotar incidencia</button>
-          </div>
-        {/each}
+          {/each}
+
       </div>
       {#if modalIncidencia}
       <div class="fixed inset-0 flex justify-center items-center bg-black/50">

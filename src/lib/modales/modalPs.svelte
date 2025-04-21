@@ -67,7 +67,7 @@
                 {/if}
               </p>
               <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-26 h-26 "/>
-              <h3 class="font-semibold text-md text-blue-700">{juego.titulo}</h3>
+              <h3 class="font-semibold text-md text-blue-700 text-center">{juego.titulo}</h3>
               <p class="text-xl text-gray-600 font-bold">{juego.precio}€</p>
               <p class="text-sm font-bold">usuario</p>
               <p
