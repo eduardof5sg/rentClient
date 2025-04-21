@@ -3,16 +3,30 @@
     import Navbar from '$lib/componentes/navbar.svelte';
     import CrearJuego from '$lib/modales/crearJuego.svelte';
     import apiAlquiler from '$lib/endpoints/axios.alquiler.js';
+    import apiDelivery from '$lib/endpoints/axiosDelivery.js';
     export let data;
     const {datos,alquileres,juegos,alquilados,pedidos} = data
     let tabActivo = 'datos';
     let modalVisible = false;
-    
-    
 
+    let fechainicio = '';
+    let fechafin = '';
+    let alquilerSeleccionado = null;
+
+    let modalEntrega = false;
+    
     const cambiarTab = (tab) =>{
         tabActivo = tab;
     }
+
+    const formatFecha = (fecha) => {
+    if (!fecha) return ''; 
+    const date = new Date(fecha);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()); // Tomamos solo los 2 últimos dígitos
+    return `${day}/${month}/${year}`;
+  }
 
     async function confirmarAlquiler(solicitudId){
         try {
@@ -23,6 +37,50 @@
             alert("Hubo un problema al confirmar");
         }
     }
+
+    async function confirmarEntrega(alquilerid){
+  
+      try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        alert("Debes iniciar sesión.");
+        return;
+      }
+
+      // Decodificar el token manualmente
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      console.log(payload.userid)
+      // Verificar que el usuario del token coincida con el cliente del alquiler
+      if (payload.userid !== alquilerSeleccionado.cliente) {
+        alert("No tienes permiso para confirmar esta entrega.");
+        return;
+      }
+
+      // Enviar la solicitud de confirmación de entrega
+      const response = await apiDelivery.put(`/entrega/${alquilerSeleccionado._id}`, {
+        fechainicio: formatFecha(fechainicio),
+        fechafin: formatFecha(fechafin)
+      });
+
+      alert("Entrega confirmada correctamente.");
+      modalEntrega = false 
+      window.location.reload();
+    } catch (error) {
+      console.error("Error al confirmar la entrega:", error);
+      alert("Hubo un error al confirmar la entrega.");
+    }
+    }
+
+    const abrirEntrega = (pedido) =>{
+      alquilerSeleccionado = pedido;
+
+      modalEntrega = true
+    }
+    function cerrarEntrega (){
+      modalEntrega = false
+    }
+
 
     async function eliminarAlquiler(solicitudId) {
   try {
@@ -216,10 +274,21 @@
                 <span class="font-semibold text-gray-600">Fecha:</span>
                 <span>{pedido.fechasolicitud}</span>
               </div>
+              {#if pedido.fechainicio && pedido.fechafin}
+              <div class="flex justify-between border-b pb-2">
+                <span class="font-semibold text-gray-600">Fecha de inicio:</span>
+                <span>{pedido.fechainicio}</span>
+              </div>
+              <div class="flex justify-between border-b pb-2">
+                <span class="font-semibold text-gray-600">Fecha de fin:</span>
+                <span>{pedido.fechafin}</span>
+              </div>
+            {/if}
               <div class="flex justify-between">
                 <span class="font-semibold text-gray-600">Precio final:</span>
                 <span>{pedido.preciofinal}€</span>
               </div>
+              <button on:click={() => abrirEntrega(pedido)} class="p-2 rounded-xl bg-violet-600 text-white px-16 ml-10 mt-2">Confirmar Entrega</button>
             </div>
           </div>
           
@@ -269,4 +338,24 @@
         <p class="text-xl font-bold text-purple-600">Aquí puedes ver tus logros 🏆</p>
       {/if}
     </div>
+    {#if modalEntrega}
+  <div class="fixed inset-0 flex justify-center items-center bg-black/50">
+    <div class="bg-white p-6 w-auto rounded-xl shadow-md relative flex flex-col gap-4">
+      <p class="text-xl font-bold">Confirmar Entrega</p>
+      <form on:submit|preventDefault={confirmarEntrega}>
+        <div class="flex flex-col gap-2 mb-4">
+          <label class="text-sm font-semibold">Fecha de inicio:</label>
+          <input type="date" bind:value={fechainicio} class="border rounded p-1" />
+
+          <label class="text-sm font-semibold">Fecha de fin:</label>
+          <input type="date" bind:value={fechafin} class="border rounded p-1" />
+        </div>
+        <div class="flex gap-4 justify-end">
+          <button type="button" on:click={cerrarEntrega} class="p-2 bg-red-500 rounded-xl text-white">Cancelar</button>
+          <button type="submit" class="p-2 bg-indigo-600 rounded-xl text-white">Confirmar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{/if}
   </main>

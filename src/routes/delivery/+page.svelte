@@ -5,7 +5,19 @@
   
     let alquileres = []; // Aquí guardaremos los alquileres que obtenemos del backend
     let error = ''; // Para manejar posibles errores
-  
+    let modalConfirmar = false
+    let alquilerSeleccionado = null;
+
+    const abrirModal = (alquiler)=>{
+      alquilerSeleccionado = alquiler;
+      
+      modalConfirmar = true;
+    }
+
+   
+    function cerrarModal (){
+      modalConfirmar = false
+    }
     // Función para obtener alquileres según el código postal
     const obtenerAlquileres = async () => {
       try {
@@ -31,6 +43,37 @@
         // Mostrar detalles del error
       }
     };
+
+    const estadoReparto = async (alquilerId) => {
+  try {
+    const token = localStorage.getItem('token'); // Obtenemos el token desde localStorage
+    console.log("🚀 Token:", token); // Asegúrate de que el token se está obteniendo correctamente
+
+    // Asegúrate de que el token esté presente
+    if (!token) {
+      error = "No se encontró el token de autenticación.";
+      return;
+    }
+
+    // Realizamos la solicitud con el token en la cabecera
+    const response = await apiDelivery.put(
+      `/reparto/${alquilerId}`,// URL correcta para el PUT
+      {},// No se está enviando un cuerpo, así que pasamos `null`
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Enviamos el token en el header 'Authorization'
+        },
+      }
+    );
+
+    console.log("Respuesta de la solicitud:", response); 
+    modalConfirmar = false// Verifica la respuesta del servidor
+    alert('El pedido está listo para su expedición');
+  } catch (err) {
+    console.error("❌ Error al cambiar el estado:", err); // Detalles del error
+    error = 'Error al cambiar a modo reparto';
+  }
+};
   
     // Ejecutar obtenerAlquileres cuando el componente se monte
     onMount(() => {
@@ -71,15 +114,29 @@
                 <td class="px-4 py-2">{alquiler.cliente?.telefono}</td>
                 <td class="px-4 py-2">{alquiler.cliente?.direccion}</td>
                 <td class="px-4 py-2">
-                  <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full
-                    {alquiler.estado === 'confirmado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                  <button
+                    class="text-green-600 p-1 bg-gray-200 rounded-xl"
+                    on:click={() => abrirModal(alquiler)}
+                  >
                     {alquiler.estado}
-                  </span>
+                  </button>
                 </td>
               </tr>
+              
             {/each}
           </tbody>
         </table>
+        {#if modalConfirmar && alquilerSeleccionado}
+        <div class=" fixed inset-0 flex justify-center items-center bg-black/50 ">
+          <div class="bg-white p-6 w-auto relative flex items-center flex-col ">
+            <p class="text-xl mb-3">Cambiar estado a reparto ?</p>
+            <div class="flex flex-row gap-8">
+              <button class="p-2 bg-red-500 rounded-xl text-white" on:click={cerrarModal}>Cancelar</button>
+              <button class="p-2 bg-indigo-600 rounded-xl text-white" on:click={() => estadoReparto(alquilerSeleccionado._id)}>Confirmar</button>
+            </div>
+          </div>
+        </div>
+        {/if}
       </div>
     {/if}
   </main>
