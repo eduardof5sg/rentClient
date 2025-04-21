@@ -199,8 +199,12 @@
                 <span class="text-violet-700">{historial.estado}</span>
               </div>
               <div class="flex justify-between border-b pb-1">
-                <span class="font-semibold text-gray-600">Fecha:</span>
-                <span>{historial.fechasolicitud}</span>
+                <span class="font-semibold text-gray-600">Direccion entrega:</span>
+                <span>{historial.cliente.direccion}</span>
+              </div>
+              <div class="flex justify-between border-b pb-1">
+                <span class="font-semibold text-gray-600">Direccion de Recogida</span>
+                <span>{historial.propietario.direccion}</span>
               </div>
               {#if historial.fechainicio && historial.fechafin}
                 <div class="flex justify-between border-b pb-1">
