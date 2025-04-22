@@ -1,8 +1,8 @@
 import axios from "axios"
 
 const apiReseñas = axios.create({
-    // baseURL:'https://rentserver-c73g.onrender.com/reviews',
-    baseURL:'http://localhost:3000/reviews',
+    baseURL:'https://rentserver-c73g.onrender.com/reviews',
+    // baseURL:'http://localhost:3000/reviews',
     timeout: 5000,
     headers:{
         'Content-Type':'application/json'
