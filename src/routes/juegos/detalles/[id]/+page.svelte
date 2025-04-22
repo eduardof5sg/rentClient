@@ -11,6 +11,7 @@
   let mostrarModal = false;
   let semanas = 1;
   let clienteId = "";
+  let rol ='';
   let mensaje = "";
   let fallo = "";
   let confirmacion = false;
@@ -64,6 +65,8 @@
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         clienteId = payload.userid;
+        rol = payload.rol
+        
       } catch (err) {
         console.error("Error al decodificar token:", err);
       }

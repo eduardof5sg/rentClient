@@ -6,11 +6,13 @@
   import apiAlquiler from "$lib/endpoints/axios.alquiler.js";
   import apiDelivery from "$lib/endpoints/axiosDelivery.js";
   import apiReseñas from "$lib/endpoints/axiosReseñas.js";
+  import { goto } from "$app/navigation";
 
   export let data;
   const { datos, alquileres, juegos, alquilados, pedidos } = data;
+  let verificadoImg = "/backgrounds/logros/verificado.svg";
   let tabActivo = "datos";
-  console.log(pedidos)
+  console.log(datos)
   let modalReseña = false;
   let modalVisible = false;
   let modalVerificar = false;
@@ -192,6 +194,10 @@
       alert(error.response?.data?.message || "Error al eliminar la solicitud.");
     }
   }
+
+  function goDelivery(){
+    goto("/delivery")
+  }
 </script>
 
 <Navbar />
@@ -244,6 +250,11 @@
   <div class="bg-white p-2 rounded shadow-md min-h-[200px]">
     {#if tabActivo === "datos"}
       <div class="flex flex-col items-center">
+        {#if datos.rol === "repartidor"}
+        <button class="bg-green-600 p-2 rounded-xl text-white mb-3" on:click={goDelivery}>Go to delivery</button>
+        {:else}
+        <p class="mb-3 font-bold">Que tal estas hoy, colega ?</p>
+        {/if}
         <h2 class="text-xl font-bold text-gray-600">Datos personales 🧑</h2>
         <table
           class="min-w-full bg-white rounded-lg shadow overflow-hidden mt-4"
@@ -543,9 +554,19 @@
         {/if}
       </div>
     {:else if tabActivo === "logros"}
-      <p class="text-xl font-bold text-purple-600">
+      <h2 class="text-xl font-bold text-purple-600">
         Aquí puedes ver tus logros 🏆
-      </p>
+      </h2>
+      <div>
+        {#if datos.verificado === true}
+          <div class="flex flex-col max-w-16 mt-2">
+            <img class="w-16" src={verificadoImg} alt="verificado">
+            <p class="text-center text-green-600">usuario verificado</p>
+          </div>
+        {:else}
+        <p>Verificate en la pestaña datos</p>
+        {/if}
+      </div>
     {/if}
   </div>
   {#if modalEntrega}
