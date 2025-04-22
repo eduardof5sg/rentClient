@@ -50,7 +50,7 @@
     <div class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
         <div class="relative  p-6 bg-white shadow-lg flex flex-col items-center">
             <div class="flex flex-row justify-around gap-6">
-                <h1 class="text-2xl font-bold">Detalles del propietario</h1>
+                <h1 class="text-2xl font-bold">Detalles del usuario</h1>
                 <button class=" bg-white " on:click={onClose}>✖</button>
             </div>
             <div class="flex flex-col items-center">
@@ -66,7 +66,7 @@
                     </div>
                     {/if}
                 
-                    {#if confianza === false}
+                    {#if confianza === false || !confianza }
                     <p class="text-red-500">El usuario no es de confiar</p>
                     {:else}
                     <div class="flex flex-col mt-3 items-center">
