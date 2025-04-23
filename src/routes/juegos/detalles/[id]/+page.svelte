@@ -312,7 +312,7 @@
       from 0deg,
       #e60012,
       #ffffff,
-      #43b047,
+      #16b7e4,
       #ffffff,
       #e60012
     ); /* rojo-blanco-verde */

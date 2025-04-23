@@ -24,6 +24,7 @@
   let modalInfo = false;
   let propietario = '';
   let fallo = '';
+  let falloEstado = '';
   
   // variable para confirmar entrega
   let fechainicio = "";
@@ -140,7 +141,7 @@
     alert("Gracias por confirmar la devolucion, el pedido ha finalizado")
     } catch (error) {
       fallo = error.response?.data?.message
-      console.log(fallo)
+      
     }
   }
   async function crearReview() {
@@ -283,7 +284,10 @@
     });
     alert('Disponibilidad de juego cambiada');
   } catch (error) {
-    console.error("Error al cambiar la disponibilidad:", error);
+    falloEstado = error.response?.data?.message
+    setTimeout(() => {
+    falloEstado = '';
+  }, 2000);
   }
 }
 </script>
@@ -465,6 +469,9 @@
                 on:change={() => cambiarDisponibilidad(juego._id, !juego.disponibilidad)}
               />
               <label>Disponible</label>
+              {#if falloEstado}
+              <p class="text-red-500 font bold">{falloEstado}</p>
+              {/if}
             </div>
           {/each}
         </div>
