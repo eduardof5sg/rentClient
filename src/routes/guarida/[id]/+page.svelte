@@ -9,6 +9,7 @@
   import { goto } from "$app/navigation";
   import { notificaciones } from "../../../stores/notification.js";
   import Notificacion from "$lib/componentes/Notificacion.svelte";
+  import apiJuegos from "$lib/endpoints/axiosJuegos.js";
 
   export let data;
   const { datos, alquileres, juegos, alquilados, pedidos } = data;
@@ -18,6 +19,7 @@
   let tabActivo = "datos";
   let modalReseña = false;
   let modalVisible = false;
+  let modalLogros = false;
   let modalVerificar = false;
   let modalInfo = false;
   let propietario = '';
@@ -228,7 +230,7 @@
   }
 
   function faltaUnDia(fechaStr) {
-  console.log("Fecha string:", fechaStr);
+  
 
   // Obtener la fecha de hoy en formato DD/MM/YYYY
   const hoy = new Date();
@@ -237,13 +239,13 @@
   const añoHoy = hoy.getFullYear();
   const hoyStr = `${diaHoy}/${mesHoy}/${añoHoy}`; // Fecha de hoy en formato DD/MM/YYYY
 
-  console.log("Fecha hoy (formato DD/MM/YYYY):", hoyStr);
+  
 
   // Convertir la fecha de fin (fechaStr) a un formato comparable (DD/MM/YYYY)
   const [dia, mes, año] = fechaStr.split("/").map(Number);
   const fechaFinStr = `${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${año}`;
 
-  console.log("Fecha fin (formato comparable):", fechaFinStr);
+  
 
   // Calcular mañana
   const mañana = new Date(hoy);
@@ -253,14 +255,14 @@
   const añoMañana = mañana.getFullYear();
   const mañanaStr = `${diaMañana}/${mesMañana}/${añoMañana}`;
 
-  console.log("Fecha de mañana:", mañanaStr);
+  
 
   // Comparar si la fecha de fin es igual a mañana
   return fechaFinStr === mañanaStr;
 }
 
   function avisarDevolucion(juego) {
-    console.log("Avisando devolución para:", juego);
+    
     const id = crypto.randomUUID();
     notificaciones.update(n => [
       ...n,
@@ -273,6 +275,17 @@
       notificaciones.update(n => n.filter(noti => noti.id !== id));
     }, 5000);
   }
+
+  async function cambiarDisponibilidad(juegoid, nuevaDisponibilidad) {
+  try {
+    await apiJuegos.put(`/disponibilidad/${juegoid}`, {
+      disponibilidad: nuevaDisponibilidad
+    });
+    alert('Disponibilidad de juego cambiada');
+  } catch (error) {
+    console.error("Error al cambiar la disponibilidad:", error);
+  }
+}
 </script>
 
 <Navbar />
@@ -315,10 +328,15 @@
       class="px-4 py-2 font-semibold rounded-t hover:bg-gray-100 transition"
       class:bg-black={tabActivo === "logros"}
       class:text-white={tabActivo === "logros"}
-      on:click={() => cambiarTab("logros")}
+      on:click={() => modalLogros = true}
     >
       Logros
     </button>
+    <InfoUsuario
+    visible={modalLogros}
+    usuarioid={datos._id}
+    onClose={() => (modalLogros = false)}
+  />
   </div>
 
   <!-- Contenido dinámico según tab activo -->
@@ -436,11 +454,17 @@
                 alt="Imagen del juego"
                 class="w-auto object-cover rounded mb-2 mt-1"
               />
-              <p>{juego.precio}€</p>
+              <p class="font-bold text-blue-600 text-xl">{juego.precio}€</p>
               <p class="text-center">
                 <strong>Alquileres:</strong>
                 {juego.totalalquileres}
               </p>
+              <input
+                type="checkbox"
+                bind:checked={juego.disponibilidad}
+                on:change={() => cambiarDisponibilidad(juego._id, !juego.disponibilidad)}
+              />
+              <label>Disponible</label>
             </div>
           {/each}
         </div>
@@ -645,20 +669,7 @@
           <p class="text-gray-500">No tienes solicitudes por el momento.</p>
         {/if}
       </div>
-    {:else if tabActivo === "logros"}
-      <h2 class="text-xl font-bold text-purple-600">
-        Aquí puedes ver tus logros 🏆
-      </h2>
-      <div>
-        {#if datos.verificado === true}
-          <div class="flex flex-col max-w-16 mt-2">
-            <img class="w-16" src={verificadoImg} alt="verificado">
-            <p class="text-center text-green-600">usuario verificado</p>
-          </div>
-        {:else}
-        <p>Verificate en la pestaña datos</p>
-        {/if}
-      </div>
+    
     {/if}
   </div>
   {#if modalEntrega}

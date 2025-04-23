@@ -5,7 +5,7 @@
     let listaNotificaciones = [];
     notificaciones.subscribe(value => {
     listaNotificaciones = value;
-    console.log("Notificaciones actuales:", listaNotificaciones);
+    
   });
 
   function cerrar(id) {

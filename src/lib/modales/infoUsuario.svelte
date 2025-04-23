@@ -3,6 +3,7 @@
     import apiUsers from "$lib/endpoints/axiosUser";
     import apiJuegos from "$lib/endpoints/axiosJuegos";
     import apiReseñas from "$lib/endpoints/axiosReseñas";
+    import apiAlquiler from "$lib/endpoints/axios.alquiler";
 
     // variables que vienen desde el padre
     export let visible = false;
@@ -12,8 +13,10 @@
     let verificacion = '';
     let confianza = '';
     let reviews = [];
+    let alquileres = [];
     let imagenVerificado = "/backgrounds/logros/verificado.svg";
     let imagenConfianza = "/backgrounds/logros/confianza.svg";
+    let imagenAprendiz ="/backgrounds/logros/aprendiz.svg"
     let fallo = '';
 
     const infoUsuario = async ()=>{
@@ -31,16 +34,26 @@
         try {
             const res = await apiReseñas.get(`/${usuarioid}`)
             reviews = res.data
-            c
+            
             
         } catch (error) {
             fallo = error.response?.data?.message
         }
     }
 
+    const alquileresUsuario = async() =>{
+      try {
+        const response = await apiAlquiler.get(`/alquilados/${usuarioid}`)
+        alquileres = response.data
+      } catch (error) {
+        fallo = error.response?.data?.message
+      }
+    }
+
     onMount(() => {
     infoUsuario();
     reseñasUsuario();
+    alquileresUsuario();
 });
     
 
@@ -55,7 +68,7 @@
             </div>
             <div class="flex flex-col items-center">
                <h1 class="text-2xl text-indigo-700 font-bold mb-3"> Logros</h1>
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-3 gap-4 items-center">
 
                     {#if verificacion === false}
                     <p class="text-red-500">El usuario no está verificado</p>
@@ -72,6 +85,15 @@
                     <div class="flex flex-col mt-3 items-center">
                         <img class="w-24" src={imagenConfianza} alt="icono de usuario confiable">
                         <p class="text-green-600 font-bold text-center">Usuario confiable</p>
+                    </div>
+                    {/if}
+
+                    {#if  alquileres.length === 0  } 
+                    <p class="text-red-600">El usuario aun no ha puesto en alquiler ningun juego</p>
+                    {:else if alquileres.length <5}
+                    <div class="flex flex-col mt-6 items-center ">
+                      <img class="w-20" src={imagenAprendiz} alt="icono de usuario confiable">
+                      <p class="text-green-600 font-bold text-center">aprendiz de mercader</p>
                     </div>
                     {/if}
                 </div> 
