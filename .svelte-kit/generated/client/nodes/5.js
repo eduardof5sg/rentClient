@@ -1,3 +1,3 @@
-import * as universal from "../../../../src/routes/juegos/detalles/[id]/+page.js";
+import * as universal from "../../../../src/routes/guarida/[id]/+page.js";
 export { universal };
-export { default as component } from "../../../../src/routes/juegos/detalles/[id]/+page.svelte";
+export { default as component } from "../../../../src/routes/guarida/[id]/+page.svelte";

@@ -1,3 +1,3 @@
-import * as universal from "../../../../src/routes/guarida/[id]/+page.js";
+import * as universal from "../../../../src/routes/delivery/+page.js";
 export { universal };
-export { default as component } from "../../../../src/routes/guarida/[id]/+page.svelte";
+export { default as component } from "../../../../src/routes/delivery/+page.svelte";
