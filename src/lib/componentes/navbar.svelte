@@ -93,7 +93,7 @@ onMount(() => {
       <a href="/" class="block py-2 px-2 hover:bg-gray-800 rounded">Inicio</a>
       <a href="/menu" class="block py-2 px-2 hover:bg-gray-800 rounded">Consolas</a>
       <button on:click={navegar}  class="block py-2 px-2 hover:bg-gray-800 rounded">Mi cuenta</button>
-      <a href="/contacto" class="block py-2 px-2 hover:bg-gray-800 rounded">Contacto</a>
+      <a href="/aboutUs" class="block py-2 px-2 hover:bg-gray-800 rounded">Conocenos</a>
     </div>
   </main>
   

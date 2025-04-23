@@ -36,7 +36,7 @@
     const abriModalIncidencia = (historial)=>{
       historialSeleccionado = historial
       modalIncidencia = true;      
-      console.log(historialSeleccionado)
+      
     }
 
     const cerrarModalIncidencia = ()=>{
@@ -62,7 +62,7 @@
         });
         
         alquileres = response.data; // Guardamos los alquileres en el array
-        console.log(alquileres)
+        
       } catch (err) {
         error = 'Error al obtener los alquileres.'; // Manejo de errores
         // Mostrar detalles del error
@@ -88,7 +88,7 @@
       }
     );
 
-    console.log("Respuesta de la solicitud:", response); 
+    
     modalConfirmar = false// Verifica la respuesta del servidor
     alert('El pedido está listo para su expedición');
   } catch (err) {
@@ -115,7 +115,7 @@
         });
         
         historiales = response.data.reparto; // Guardamos los alquileres en el array
-        console.log(historiales)
+        
       } catch (err) {
         error = 'Error al obtener los alquileres.'; // Manejo de errores
         // Mostrar detalles del error

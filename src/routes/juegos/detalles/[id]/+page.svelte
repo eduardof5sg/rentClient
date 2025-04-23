@@ -5,16 +5,17 @@
   export let data;
   const { juego, error } = data;
   import apiAlquiler from "$lib/endpoints/axios.alquiler.js";
-  console.log(data);
-
+  import InfoUsuario from "$lib/modales/infoUsuario.svelte";
+  
   let imagenActual = 0;
   let mostrarModal = false;
   let semanas = 1;
   let clienteId = "";
+  let rol ='';
   let mensaje = "";
   let fallo = "";
   let confirmacion = false;
-
+  let modalInfo = false;
   const siguiente = () => {
     imagenActual = (imagenActual + 1) % juego.imagenes.length;
   };
@@ -26,35 +27,34 @@
 
   const alquilar = () => {
     const token = localStorage.getItem("token");
-    
+
     // Verificar si el token existe
     if (!token) {
       alert("Debes iniciar sesión para alquilar un juego.");
       goto("/login"); // Redirigir a la página de login
       return;
     }
-    
+
     try {
       // Decodificar el token y obtener el usuario ID
       const payload = JSON.parse(atob(token.split(".")[1]));
       const usuarioId = payload.userid;
-      
+
       // Verificar si el usuario es el propietario del juego
       if (juego.userid === usuarioId) {
         alert("Ya eres propietario de este juego.");
         return; // No continuar con el alquiler
       }
-      
     } catch (err) {
       console.error("Error al decodificar el token:", err);
     }
-    
+
     // Verificar si el juego está disponible
     if (!juego.disponibilidad) {
       alert("Este juego no está disponible.");
       return;
     }
-    
+
     // Si pasa todas las verificaciones, mostrar el modal
     mostrarModal = true;
   };
@@ -65,6 +65,8 @@
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         clienteId = payload.userid;
+        rol = payload.rol
+        
       } catch (err) {
         console.error("Error al decodificar token:", err);
       }
@@ -86,12 +88,10 @@
       fechasolicitud: fechasolicitud,
     };
     try {
-      console.log(body);
       const response = await apiAlquiler.post(`/${juego._id}`, body);
       confirmacion = true;
     } catch (error) {
       fallo = error.response.data.message || "Error de conexión";
-      console.log(fallo);
     }
   };
   function recargarPagina() {
@@ -111,6 +111,31 @@
           class="bg-violet-700 text-white p-2 rounded-xl mb-2 font-bold"
           >Alquilar</button
         >
+        <button on:click={() => (modalInfo = true)}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#000000"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path
+              d="M5.52 19c.64-2.2 1.84-3 3.22-3h6.52c1.38 0 2.58.8 3.22 3"
+            /><circle cx="12" cy="10" r="3" /><circle
+              cx="12"
+              cy="12"
+              r="10"
+            /></svg
+          >
+        </button>
+        <InfoUsuario
+          visible={modalInfo}
+          usuarioid={juego.userid}
+          onClose={() => (modalInfo = false)}
+        />
         <h1 class="text-3xl font-bold text-blue-800 mb-4">{juego.titulo}</h1>
         <p class="mb-8">"{juego.descripcion}"</p>
         <div
@@ -143,7 +168,7 @@
           </button>
           <button
             on:click={siguiente}
-            class="absolute top-[-92px] left-40  transform -translate-y-1/2 rounded-full shadow"
+            class="absolute top-[-92px] left-40 transform -translate-y-1/2 rounded-full shadow"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -163,10 +188,7 @@
         <p class="text-2xl font-bold text-indigo-600">{juego.precio}€</p>
         <p class="font-bold">{juego.estado}</p>
         <p
-         
-          class={
-            `${!juego.disponibilidad ? 'bg-red-600 text-white p-1 rounded-xl font-bold' : 'bg-green-600 text-white p-1 rounded-xl font-bold'}`
-          }
+          class={`${!juego.disponibilidad ? "bg-red-600 text-white p-1 rounded-xl font-bold" : "bg-green-600 text-white p-1 rounded-xl font-bold"}`}
         >
           {juego.disponibilidad ? "Disponible" : "No disponible"}
         </p>

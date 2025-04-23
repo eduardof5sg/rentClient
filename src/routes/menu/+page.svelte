@@ -1,5 +1,7 @@
 <script>
     import Navbar from "$lib/componentes/navbar.svelte";
+    import Notificacion from "$lib/componentes/Notificacion.svelte";
+    import { notificaciones } from "../../stores/notification.js";
     let ps = "/backgrounds/consolas/psp.jpg"
     let xbox = "/backgrounds/consolas/xbox.jpg"
     let nintendo = "/backgrounds/consolas/nintendo.jpg"
@@ -35,6 +37,8 @@
     </div>
     <ModalPs visible={modalPs} onClose={() => modalPs = false}/>
     <ModalXbox visible={modalXbox} onClose={() => modalXbox = false}/>
+    <Notificacion />
+    
 </main>
 <style>
     .gradient-border {
