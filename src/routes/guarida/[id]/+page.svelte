@@ -7,9 +7,13 @@
   import apiDelivery from "$lib/endpoints/axiosDelivery.js";
   import apiReseñas from "$lib/endpoints/axiosReseñas.js";
   import { goto } from "$app/navigation";
+  import { notificaciones } from "../../../stores/notification.js";
+  import Notificacion from "$lib/componentes/Notificacion.svelte";
 
   export let data;
   const { datos, alquileres, juegos, alquilados, pedidos } = data;
+  
+
   let verificadoImg = "/backgrounds/logros/verificado.svg";
   let tabActivo = "datos";
   let modalReseña = false;
@@ -222,6 +226,53 @@
   function goDelivery(){
     goto("/delivery")
   }
+
+  function faltaUnDia(fechaStr) {
+  console.log("Fecha string:", fechaStr);
+
+  // Obtener la fecha de hoy en formato DD/MM/YYYY
+  const hoy = new Date();
+  const diaHoy = String(hoy.getDate()).padStart(2, '0');  // Día con 2 dígitos
+  const mesHoy = String(hoy.getMonth() + 1).padStart(2, '0');  // Mes con 2 dígitos (0-11 en JS)
+  const añoHoy = hoy.getFullYear();
+  const hoyStr = `${diaHoy}/${mesHoy}/${añoHoy}`; // Fecha de hoy en formato DD/MM/YYYY
+
+  console.log("Fecha hoy (formato DD/MM/YYYY):", hoyStr);
+
+  // Convertir la fecha de fin (fechaStr) a un formato comparable (DD/MM/YYYY)
+  const [dia, mes, año] = fechaStr.split("/").map(Number);
+  const fechaFinStr = `${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${año}`;
+
+  console.log("Fecha fin (formato comparable):", fechaFinStr);
+
+  // Calcular mañana
+  const mañana = new Date(hoy);
+  mañana.setDate(hoy.getDate() + 1);
+  const diaMañana = String(mañana.getDate()).padStart(2, '0');
+  const mesMañana = String(mañana.getMonth() + 1).padStart(2, '0');
+  const añoMañana = mañana.getFullYear();
+  const mañanaStr = `${diaMañana}/${mesMañana}/${añoMañana}`;
+
+  console.log("Fecha de mañana:", mañanaStr);
+
+  // Comparar si la fecha de fin es igual a mañana
+  return fechaFinStr === mañanaStr;
+}
+
+  function avisarDevolucion(juego) {
+    console.log("Avisando devolución para:", juego);
+    const id = crypto.randomUUID();
+    notificaciones.update(n => [
+      ...n,
+      {
+        id,
+        mensaje: `Recuerda devolver el juego "${juego}" mañana.`,
+      }
+    ]);
+    setTimeout(() => {
+      notificaciones.update(n => n.filter(noti => noti.id !== id));
+    }, 5000);
+  }
 </script>
 
 <Navbar />
@@ -429,6 +480,10 @@
                   <span class="font-semibold text-gray-600">Fecha:</span>
                   <span>{alquilado.fechasolicitud}</span>
                 </div>
+                <div class="flex justify-between border-b pb-2">
+                  <span class="font-bold text-violet-600">Dia de devolucion:</span>
+                  <span>{alquilado.fechafin}</span>
+                </div>
                 <div class="flex justify-between">
                   <span class="font-semibold text-gray-600">Precio final:</span>
                   <span>{alquilado.preciofinal}€</span>
@@ -494,6 +549,10 @@
                       >{pedido.fechafin}</span
                     >
                   </div>
+                  {#if pedido.fechafin && faltaUnDia(pedido.fechafin)}
+                  <p>Notificación de devolución se muestra</p>  <!-- Para depurar -->
+                  {@html avisarDevolucion(pedido.juegoid.titulo)}
+                {/if}
                 {/if}
                 <div class="flex justify-between">
                   <span class="font-semibold text-gray-600">Precio final:</span>
@@ -679,4 +738,5 @@
       </div>
     </div>
   {/if}
+  <Notificacion />
 </main>
