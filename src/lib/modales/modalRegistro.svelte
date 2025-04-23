@@ -21,16 +21,47 @@
   let mensaje = "";
 
   const registrarUsuario = async () => {
-    error = "";
-    mensaje = "";
+  error = "";
+  mensaje = "";
 
-    try {
-      const response = await apiUsers.post("/registro", formulario);
-      confirmacion = true;
-    } catch (err) {
-      error = err.response?.data?.error || "Error alregistrarse";
-    }
-  };
+  // Validaciones personalizadas
+  const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+  const soloNumeros = /^\d+$/;
+  const contraseñaValida = /^(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{6,}$/;
+
+  if (!soloLetras.test(formulario.nombre)) {
+    error = "El nombre solo debe contener letras.";
+    return;
+  }
+  if (!soloLetras.test(formulario.apellidos)) {
+    error = "Los apellidos solo deben contener letras.";
+    return;
+  }
+  if (!soloNumeros.test(formulario.codigopostal)) {
+    error = "El código postal solo debe contener números.";
+    return;
+  }
+  if (!soloNumeros.test(formulario.telefono) || formulario.telefono.length !== 9) {
+    error = "El teléfono debe contener exactamente 9 dígitos.";
+    return;
+  }
+  if (!contraseñaValida.test(formulario.contraseña)) {
+    error = "La contraseña debe contener al menos un número y un carácter especial.";
+    return;
+  }
+  if (formulario.contraseña !== formulario.repetirContraseña) {
+    error = "Las contraseñas no coinciden.";
+    return;
+  }
+
+  try {
+    const response = await apiUsers.post("/registro", formulario);
+    mensaje = "Registro exitoso. ¡Bienvenido!";
+    confirmacion = true;
+  } catch (err) {
+    error = err.response?.data?.error || "Error al registrarse.";
+  }
+};
 </script>
 
 {#if visible}
@@ -68,7 +99,7 @@
         </select>
         <input
           bind:value={formulario.direccion}
-          placeholder="Dirección"
+          placeholder="Nombre de la calle , nº portal , piso y letra"
           class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
           required
         />
@@ -101,7 +132,7 @@
         />
 
         {#if error}
-          <p class="text-red-600 text-sm">{error}</p>
+          <p class="text-red-600 text-lg font-bold">{error}</p>
         {/if}
         {#if mensaje}
           <p class="text-green-600 text-sm">{mensaje}</p>

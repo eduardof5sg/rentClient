@@ -12,11 +12,12 @@
   const { datos, alquileres, juegos, alquilados, pedidos } = data;
   let verificadoImg = "/backgrounds/logros/verificado.svg";
   let tabActivo = "datos";
-  console.log(datos)
   let modalReseña = false;
   let modalVisible = false;
   let modalVerificar = false;
   let modalInfo = false;
+  let propietario = '';
+  let fallo = '';
   
   // variable para confirmar entrega
   let fechainicio = "";
@@ -86,7 +87,6 @@
 
       // Decodificar el token manualmente
       const payload = JSON.parse(atob(token.split(".")[1]));
-      console.log(payload.userid);
       // Verificar que el usuario del token coincida con el cliente del alquiler
       if (payload.userid !== alquilerSeleccionado.cliente) {
         alert("No tienes permiso para confirmar esta entrega.");
@@ -111,6 +111,32 @@
     }
   }
 
+  async function confirmarDevolucion(alquilerid){
+    console.log(alquilerid)
+    try {
+      const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Debes iniciar sesión.");
+      return;
+    }
+    
+
+    // Decodificar el token manualmente
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    propietario = payload.userid
+    console.log(propietario)
+    
+    const response = await apiAlquiler.put(`/devolucion/${alquilerid}`,{
+      propietario:propietario
+      
+    })  
+    alert("Gracias por confirmar la devolucion, el pedido ha finalizado")
+    } catch (error) {
+      fallo = error.response?.data?.message
+      console.log(fallo)
+    }
+  }
   async function crearReview() {
   try {
     const token = localStorage.getItem("token");
@@ -123,7 +149,6 @@
 
     // Determinar a quién va dirigida la reseña
     let receptorid = null;
-    console.log(pedidoSeleccionado)
     if (alquiladoSeleccionado) {
       receptorid = alquiladoSeleccionado.cliente._id;
     } else if (pedidoSeleccionado) {
@@ -170,7 +195,6 @@
 
   const reseñaPropietario = (pedido) =>{
     pedidoSeleccionado = pedido
-    console.log(pedidoSeleccionado)
     modalReseña = true;
   }
 
@@ -410,9 +434,18 @@
                   <span>{alquilado.preciofinal}€</span>
                 </div>
               </div>
-              <button class="bg-green-600 p-2 text-white rounded-xl font-bold mt-4 ml-16" on:click={() =>abrirReseña(alquilado)}>
+              <div class="flex flex-col items-center gap-4">
+                 <button class="bg-green-600 p-2 text-white rounded-xl font-bold mt-4 " on:click={() =>abrirReseña(alquilado)}>
                 Dejar reseña al cliente
               </button>
+              {#if alquilado.estado !== "devuelto"}
+              <button class="bg-violet-600 text-white p-2 rounded-xl" on:click={()=>confirmarDevolucion(alquilado._id)}>Confirmar Devolucion del juego</button>
+              {#if fallo}
+              <p class="font-bold text-red-600">{fallo}</p>
+              {/if}
+              {/if}
+              </div>
+             
             </div>
           {/each}
         </div>

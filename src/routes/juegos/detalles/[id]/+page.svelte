@@ -88,12 +88,10 @@
       fechasolicitud: fechasolicitud,
     };
     try {
-      console.log(body);
       const response = await apiAlquiler.post(`/${juego._id}`, body);
       confirmacion = true;
     } catch (error) {
       fallo = error.response.data.message || "Error de conexión";
-      console.log(fallo);
     }
   };
   function recargarPagina() {

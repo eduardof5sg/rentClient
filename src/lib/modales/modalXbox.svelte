@@ -16,7 +16,7 @@
         // Decodificar el token (solo el payload)
         const payload = JSON.parse(atob(token.split(".")[1])); // Decodificamos el payload
         codigoPostalToken = payload.codigopostal; // Obtener el código postal
-        console.log(codigoPostalToken)
+        
       } catch (err) {
         console.error("Error al decodificar token:", err);
       }
@@ -26,7 +26,7 @@
     apiJuegos.get("?consola=XboxSeries")
       .then(response => {
         juegos = response.data;
-        console.log(juegos);
+        
       })
       .catch(error => {
         console.error("Error al cargar juegos de PS5", error);
