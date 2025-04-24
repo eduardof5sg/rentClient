@@ -3,10 +3,10 @@
 </script>
 <main>
  <Navbar />
- <section class="bg-white py-12 px-6 md:px-16 text-gray-800">
+ <section class="bg-white py-4 px-6 md:px-16 text-gray-800">
   <div class="max-w-4xl mx-auto text-center">
-    <h2 class="text-3xl font-extrabold mb-6 text-indigo-600">Sobre nosotros</h2>
-    <p class="text-lg leading-relaxed">
+    <h2 class="text-3xl font-extrabold mb-4 text-indigo-600">Sobre nosotros</h2>
+    <p class="text-lg mb-5 ">
       Somos un grupo de estudiantes comprometidos, que hemos
       creado esta plataforma con el objetivo de conectar a personas apasionadas
       por los videojuegos, ya sea en consolas como PlayStation 5, Xbox o
@@ -22,7 +22,9 @@
         class="text-indigo-500 font-semibold">¡jugar!</span
       >
     </p>
+    <a href="/politicas" class="text-indigo-600 underline mt-10" >Politica privacidad</a>
   </div>
+  
 </section>   
 </main>
 

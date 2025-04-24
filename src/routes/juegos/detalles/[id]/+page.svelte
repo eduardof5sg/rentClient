@@ -5,12 +5,14 @@
   export let data;
   const { juego, error } = data;
   import apiAlquiler from "$lib/endpoints/axios.alquiler.js";
+  import apiUsers from "$lib/endpoints/axiosUser.js";
   import InfoUsuario from "$lib/modales/infoUsuario.svelte";
   
   let imagenActual = 0;
   let mostrarModal = false;
   let semanas = 1;
   let clienteId = "";
+  let usuarioConfianza = '';
   let rol ='';
   let mensaje = "";
   let fallo = "";
@@ -58,7 +60,11 @@
     // Si pasa todas las verificaciones, mostrar el modal
     mostrarModal = true;
   };
-
+  const datosUsuario = async () =>{
+    const response = await apiUsers.get(`/datos/${clienteId}`)
+    usuarioConfianza = response.data.usuarioconfianza
+    
+  }
   onMount(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -71,29 +77,32 @@
         console.error("Error al decodificar token:", err);
       }
     }
+    datosUsuario();
   });
 
   const confirmarAlquiler = async () => {
-    mensaje = "";
-    fallo = "";
-    const gastosEnvio = 1;
-    const preciofinal = juego.precio * semanas + gastosEnvio;
-    const hoy = new Date();
-    const fechasolicitud = `${hoy.getDate().toString().padStart(2, "0")}/${(hoy.getMonth() + 1).toString().padStart(2, "0")}/${hoy.getFullYear()}`;
-    const body = {
-      propietario: juego.userid,
-      cliente: clienteId,
-      semanas,
-      preciofinal,
-      fechasolicitud: fechasolicitud,
-    };
-    try {
-      const response = await apiAlquiler.post(`/${juego._id}`, body);
-      confirmacion = true;
-    } catch (error) {
-      fallo = error.response.data.message || "Error de conexión";
-    }
+  mensaje = "";
+  fallo = "";
+  const gastosEnvio = 1.5;
+  const fianza = 20;
+  const basePrecio = juego.precio * semanas;
+  const preciofinal = basePrecio + gastosEnvio + (usuarioConfianza ? 0 : fianza);
+  const hoy = new Date();
+  const fechasolicitud = `${hoy.getDate().toString().padStart(2, "0")}/${(hoy.getMonth() + 1).toString().padStart(2, "0")}/${hoy.getFullYear()}`;
+  const body = {
+    propietario: juego.userid,
+    cliente: clienteId,
+    semanas,
+    preciofinal,
+    fechasolicitud,
   };
+  try {
+    const response = await apiAlquiler.post(`/${juego._id}`, body);
+    confirmacion = true;
+  } catch (error) {
+    fallo = error.response.data.message || "Error de conexión";
+  }
+};
   function recargarPagina() {
     location.reload();
   }
@@ -101,7 +110,7 @@
 
 <main>
   <Navbar />
-  <div class="mt-4 p-4">
+  <div class="mt-4 ">
     {#if error}
       <p class="text-red-500">{error}</p>
     {:else if juego}
@@ -136,10 +145,10 @@
           usuarioid={juego.userid}
           onClose={() => (modalInfo = false)}
         />
-        <h1 class="text-3xl font-bold text-blue-800 mb-4">{juego.titulo}</h1>
-        <p class="mb-8">"{juego.descripcion}"</p>
+        <h1 class="text-3xl font-bold text-blue-800 mb-4 text-center">{juego.titulo}</h1>
+        <p class="mb-2">"{juego.descripcion}"</p>
         <div
-          class="relative w-64 h-64 mb-4 mx-auto gradient-border
+          class="relative w-72 h-72 mb-4 mx-auto gradient-border
           {juego.consola === 'Ps5' ? 'Ps5' : ''}
           {juego.consola === 'XboxSeries' ? 'XboxSeries' : ''}
           {juego.consola === 'NintendoSwitch' ? 'NintendoSwitch' : ''}"
@@ -168,7 +177,7 @@
           </button>
           <button
             on:click={siguiente}
-            class="absolute top-[-92px] left-40 transform -translate-y-1/2 rounded-full shadow"
+            class="absolute top-[-92px] left-46 transform -translate-y-1/2 rounded-full shadow"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -208,10 +217,11 @@
           <option value="3">3 semanas</option>
         </select>
         <p><strong>Precio</strong> {juego.precio * semanas}€</p>
-        <p class="text-violet-700"><strong>envío:</strong> 1€</p>
+        <p>Fianza: {usuarioConfianza ? '0€ (usuario de confianza)' : '20€'}</p>
+        <p class="text-violet-700"><strong>Envío:</strong> 1.5€</p>
         <p class="mb-4">
           <strong>Total:</strong>
-          {juego.precio * semanas + 1}€
+          {juego.precio * semanas + 1.5 + (usuarioConfianza ? 0 : 20)}€
         </p>
         <div class="flex justify-between">
           <button

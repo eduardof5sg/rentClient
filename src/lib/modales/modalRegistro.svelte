@@ -4,6 +4,7 @@
 
   export let visible = false;
   let confirmacion = false;
+  let aceptaTerminos = false;
   export let onClose;
 
   let formulario = {
@@ -130,7 +131,17 @@
           class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
           required
         />
-
+        <div class="flex items-start gap-2">
+          <input
+            type="checkbox"
+            bind:checked={aceptaTerminos}
+            class="mt-1"
+            required
+          />
+          <label class="text-sm text-gray-700">
+            He leído y acepto los <a href="/terminos" class="text-indigo-600 underline" target="_blank">términos y condiciones</a>
+          </label>
+        </div>
         {#if error}
           <p class="text-red-600 text-lg font-bold">{error}</p>
         {/if}

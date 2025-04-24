@@ -6,6 +6,7 @@
     let confirmacion = false;
     export let onClose;
     export let userid;
+    let cargando = false;
   
     let formulario = {
       consola: "",
@@ -22,27 +23,33 @@
     let mensaje = "";
   
     const registrarJuego = async () => {
-  const formData = new FormData();
-  formData.append("consola", formulario.consola);
-  formData.append("titulo", formulario.titulo);
-  formData.append("descripcion", formulario.descripcion);
-  formData.append("genero", formulario.genero);
-  formData.append("estado", formulario.estado);
-  formData.append("precio", formulario.precio);
-  formData.append("imagenes", formulario.imagen1);
-  formData.append("imagenes", formulario.imagen2);
 
-  try {
-    const response = await apiJuegos.post(`/${userid}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data"
+      if (cargando) return; // evita múltiples clics
+
+      cargando = true;
+      const formData = new FormData();
+      formData.append("consola", formulario.consola);
+      formData.append("titulo", formulario.titulo);
+      formData.append("descripcion", formulario.descripcion);
+      formData.append("genero", formulario.genero);
+      formData.append("estado", formulario.estado);
+      formData.append("precio", formulario.precio);
+      formData.append("imagenes", formulario.imagen1);
+      formData.append("imagenes", formulario.imagen2);
+
+      try {
+        const response = await apiJuegos.post(`/${userid}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
+        confirmacion = true;
+      } catch (error) {
+        error = error.response?.data?.message || "Error al registrar";
+      } finally {
+        cargando = false;
       }
-    });
-    confirmacion = true;
-  } catch (error) {
-    error = error.response?.data?.message || "Error al registrar";
-  }
-};
+    };
 
 function recargarPagina() {
     location.reload();
@@ -80,12 +87,19 @@ function recargarPagina() {
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
             required
           />
-          <input
+          <select
             bind:value={formulario.genero}
-            placeholder="Genero"
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
             required
-          />
+          >
+            <option value="" disabled selected>Selecciona un género</option>
+            <option value="acción">Acción</option>
+            <option value="aventura">Aventura</option>
+            <option value="deportes">Deportes</option>
+            <option value="rol">Rol</option>
+            <option value="estrategia">Estrategia</option>
+            <option value="carreras">Carreras</option>
+          </select>
           <select
             bind:value={formulario.estado}
             placeholder="Estado"
@@ -128,11 +142,36 @@ function recargarPagina() {
           {/if}
   
           <button
-            type="submit"
-            class="w-full bg-indigo-600 text-white py-2 rounded-md font-semibold hover:bg-indigo-700"
-          >
-            Aceptar
-          </button>
+          type="submit"
+          class="w-full bg-indigo-600 text-white py-2 rounded-md font-semibold hover:bg-indigo-700 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={cargando}
+        >
+          {#if cargando}
+            <svg
+              class="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              ></path>
+            </svg>
+            Subiendo...
+          {:else}
+            Confirmar
+          {/if}
+        </button> 
         </form>
       </div>
     </div>

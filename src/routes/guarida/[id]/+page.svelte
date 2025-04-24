@@ -119,7 +119,6 @@
   }
 
   async function confirmarDevolucion(alquilerid){
-    console.log(alquilerid)
     try {
       const token = localStorage.getItem("token");
 
@@ -132,7 +131,7 @@
     // Decodificar el token manualmente
     const payload = JSON.parse(atob(token.split(".")[1]));
     propietario = payload.userid
-    console.log(propietario)
+    
     
     const response = await apiAlquiler.put(`/devolucion/${alquilerid}`,{
       propietario:propietario
