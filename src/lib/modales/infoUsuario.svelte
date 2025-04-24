@@ -101,6 +101,7 @@
             
             <div class="flex flex-col items-center">
                 <h1 class="text-2xl text-indigo-700 font-bold mt-4">Reseñas</h1>
+                {#if reviews.length >0}
                 <div class="p-6 bg-white shadow-md rounded-md space-y-4">
                     {#each reviews as review}
                       <div class="border-b pb-4">
@@ -136,8 +137,10 @@
                         <p class="text-gray-700">{review.mensaje}</p>
                       </div>
                     {/each}
-                  </div>
-                  
+                </div>
+                {:else}
+                <p class=" text-md">"El usuario aun no tiene reseñas"</p>
+                {/if}
                 
             </div>
             

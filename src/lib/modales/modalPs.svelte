@@ -1,12 +1,35 @@
 <script>
   import { onMount } from "svelte";
   import apiJuegos from "$lib/endpoints/axiosJuegos";
+  import FiltrosJuegos from "$lib/componentes/filtrosJuegos.svelte";
 
   export let visible = false;
   export let onClose;
-
+  // Variable filtros
+  let filtroCodigoPostal = "";
+  let filtroDisponibilidad = "";
+  let filtroGenero = "";
+  let nombreJuego = "";
+  //
   let juegos = [];
   let codigoPostalToken = null;
+
+  $: juegosFiltrados = juegos.filter(juego => {
+    const coincideCodigoPostal = filtroCodigoPostal
+    ? juego.userid?.codigopostal?.toString().startsWith(filtroCodigoPostal)
+    : true;
+    const coincideDisponibilidad = filtroDisponibilidad !== ""
+      ? (filtroDisponibilidad === "true" ? juego.disponibilidad : !juego.disponibilidad)
+      : true;
+    const coincideGenero = filtroGenero ? juego.genero?.toLowerCase().includes(filtroGenero.toLowerCase()) : true;
+    const coincideBusqueda = juego.titulo?.toLowerCase().includes(nombreJuego.toLowerCase());
+
+    return coincideCodigoPostal && coincideDisponibilidad && coincideGenero && coincideBusqueda;
+  });
+
+  const actualizarFiltro = () => {
+    // Reactividad automática, no necesitas hacer nada aquí por ahora
+  };
 
   onMount(() => {
     const token = localStorage.getItem("token");
@@ -33,9 +56,7 @@
       });
   });
 
-  const cerrar = () => {
-    onClose();
-  };
+  
 
   // Función para verificar si el código postal coincide
   const verificarZona = (codigoPostalJuego) => {
@@ -48,7 +69,7 @@
     <div class="bg-white rounded-xl shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 relative border-4 border-blue-500">
       <button
         class="absolute top-3 right-3 text-xl text-gray-600 hover:text-black"
-        on:click={cerrar}
+        on:click={() =>onClose()}
       >
         ✕
       </button>
@@ -56,8 +77,15 @@
       <h2 class="text-2xl font-bold text-blue-700 mb-4">Juegos de PlayStation 5</h2>
 
       {#if juegos.length > 0}
+      <FiltrosJuegos
+         bind:filtroCodigoPostal
+        bind:filtroDisponibilidad
+        bind:filtroGenero
+        bind:nombreJuego
+        onChange={actualizarFiltro}
+      />
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {#each juegos as juego}
+          {#each juegosFiltrados as juego}
             <div class="bg-white p-2 rounded-lg shadow hover:shadow-md transition max-w-38 flex flex-col items-center">
               <p class="text-sm font-bold mb-2">
                 {#if verificarZona(juego.userid.codigopostal)}
@@ -66,7 +94,7 @@
                   <span class="text-red-500">Fuera de zona</span>
                 {/if}
               </p>
-              <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-26 h-26 "/>
+              <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-full h-26 "/>
               <h3 class="font-semibold text-md text-blue-700 text-center">{juego.titulo}</h3>
               <p class="text-xl text-gray-600 font-bold">{juego.precio}€</p>
               <p class="text-sm font-bold">usuario</p>

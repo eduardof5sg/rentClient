@@ -13,7 +13,15 @@
     let modalIncidencia = false
     let alquilerSeleccionado = null;
     let historialSeleccionado = null;
+    let filtroEstado = '';
 
+    $: historialFiltrado = historiales.filter(historial => {
+  return filtroEstado ? historial.estado === filtroEstado : true;
+});
+
+    const actualizarFiltro = () => {
+    
+   };
     const abrirModal = (alquiler)=>{
       alquilerSeleccionado = alquiler;
       
@@ -227,7 +235,15 @@
         >✖</button
       >
         </div>
-        {#each historiales as historial}
+        <select bind:value={filtroEstado} on:change={actualizarFiltro} class="mb-4 p-2 border ml-16 rounded-xl">
+          <option value="">Todos los estados</option>
+          <option value="solicitado">Solicitado</option>
+          <option value="confirmado">Confirmado</option>
+          <option value="en reparto">En reparto</option>
+          <option value="entregado">Entregado</option>
+          <option value="devuelto">Devuelto</option>
+        </select>
+        {#each historialFiltrado as historial}
             <div class="bg-gray-100 shadow rounded-md p-4">
               <h2 class="text-lg font-bold mb-4 text-gray-800 text-center">Detalles del pedido</h2>
 
@@ -263,7 +279,10 @@
                   <span class="font-semibold text-gray-600">Juego:</span>
                   <span>{historial.juegoid.titulo}</span>
                 </div>
-
+                <div class="flex justify-between border-b pb-1">
+                  <span class="font-bold text-gray-600">Solicitud</span>
+                  <span class="font-bold text-red-600 ">{historial.fechasolicitud}</span>
+                </div>
                 <div class="flex justify-between border-b pb-1">
                   <span class="font-semibold text-gray-600">Estado:</span>
                   <span class="text-violet-700 font-bold text-lg">{historial.estado}</span>
