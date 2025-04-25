@@ -13,6 +13,7 @@
 
   export let data;
   const { datos, alquileres, juegos, alquilados, pedidos } = data;
+  console.log(datos)
   
 
   let verificadoImg = "/backgrounds/logros/verificado.svg";
@@ -210,7 +211,7 @@
     try {
       const response = await apiAlquiler.delete(`/${solicitudId}`, {
         data: {
-          propietario: datos._id, // o datos.propietario si ya lo tienes así
+          usuarioId: datos._id, // o datos.propietario si ya lo tienes así
         },
       });
 
@@ -588,14 +589,27 @@
                   <span class="font-semibold text-gray-600">Precio final:</span>
                   <span>{pedido.preciofinal}€</span>
                 </div>
-                {#if pedido.estado !== "entregado"}
+                <div class="flex flex-col items-center">
+                  {#if pedido.estado === "en reparto"}
                   <button
                     on:click={() => abrirEntrega(pedido)}
-                    class="p-2 rounded-xl bg-violet-600 text-white px-16 ml-10 mt-2"
+                    class="p-2 rounded-xl bg-violet-600 text-white px-16  mt-2"
                     >Confirmar Entrega</button
                   >
-                {/if}
+                  {/if}
+                  {#if pedido.estado === "solicitado"}
+                  <button
+                    class="bg-red-600 p-2 text-white rounded-xl font-bold mt-2 "
+                    on:click={() => eliminarAlquiler(pedido._id)}
+                  >
+                    Eliminar solicitud
+                  </button>
+                  {/if}
+                </div>
+                
               </div>
+                
+      
               <button class="bg-green-600 p-2 text-white rounded-xl font-bold mt-4 ml-16" on:click={() =>reseñaPropietario(pedido)}>
                 Dejar reseña al propietario
               </button>

@@ -93,7 +93,7 @@
                   <span class="text-red-500">Fuera de zona</span>
                 {/if}
               </p>
-              <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-full h-26 "/>
+              <img src={juego.imagenes[0]} alt={juego.titulo} class="rounded mb-2 w-26 h-26 object-cover"/>
               <h3 class="font-semibold text-md text-green-700 text-center">{juego.titulo}</h3>
               <p class="text-xl text-gray-600 truncate"> {juego.precio}€</p>
               <p class="text-sm font-bold">usuario</p>

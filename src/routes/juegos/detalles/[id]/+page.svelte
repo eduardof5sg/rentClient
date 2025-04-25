@@ -84,9 +84,13 @@
   mensaje = "";
   fallo = "";
   const gastosEnvio = 1.5;
-  const fianza = 20;
+  let fianza = 0
+  if(!usuarioConfianza){
+    fianza = juego.precio <= 10 ? 10 : 20;
+  }
+   
   const basePrecio = juego.precio * semanas;
-  const preciofinal = basePrecio + gastosEnvio + (usuarioConfianza ? 0 : fianza);
+  const preciofinal = basePrecio + gastosEnvio + fianza;
   const hoy = new Date();
   const fechasolicitud = `${hoy.getDate().toString().padStart(2, "0")}/${(hoy.getMonth() + 1).toString().padStart(2, "0")}/${hoy.getFullYear()}`;
   const body = {
@@ -217,11 +221,20 @@
           <option value="3">3 semanas</option>
         </select>
         <p><strong>Precio</strong> {juego.precio * semanas}€</p>
-        <p>Fianza: {usuarioConfianza ? '0€ (usuario de confianza)' : '20€'}</p>
+        <p>
+          Fianza:
+          {#if usuarioConfianza}
+            0€ (usuario de confianza)
+          {:else if juego.precio <= 10}
+            10€
+          {:else}
+            20€
+          {/if}
+        </p>
         <p class="text-violet-700"><strong>Envío:</strong> 1.5€</p>
-        <p class="mb-4">
+        <p class="mb-4 mt-4 text-2xl">
           <strong>Total:</strong>
-          {juego.precio * semanas + 1.5 + (usuarioConfianza ? 0 : 20)}€
+          {juego.precio * semanas + 1.5 + (usuarioConfianza ? 0 : (juego.precio <= 10 ? 10 : 20))}€
         </p>
         <div class="flex justify-between">
           <button
