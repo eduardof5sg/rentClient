@@ -13,7 +13,7 @@
 
   export let data;
   const { datos, alquileres, juegos, alquilados, pedidos } = data;
-  console.log(datos)
+  
   
 
   let verificadoImg = "/backgrounds/logros/verificado.svg";
